@@ -13,17 +13,21 @@ for the members, the service subscription has several payment options:
 
 
 
-artigo ascarza
-    Study 2: Special interest membership organization (North America)
-    The second application corresponds to a (subscription-based) membership organization located in North America. This organization offers an annual subscription/membership that
-    gives members the right to use its services (both online and offline services), and also offers
-    them a discount (sometimes as high as 100% discount) to attend events.
-medidas
+
+# Artigo ascarza
+
+
+Ascarza, E. (2018). Retention Futility: Targeting High-Risk Customers Might be Ineffective. Journal of Marketing Research, 55(1), 80-98. sim. https://doi.org/10.1509/jmr.16.0163
+
+
+## Developed actions 
+    
     Each month, the company identified the customers who were up for renewal and
     split them (randomly and evenly) between a treatment group that received a "thank you" gift
     with the letter and a control group that received only the renewal latter.
-considerar
-    interpretabilidade RQ2
-    piping several algorithms to improve accuracy
-        hybrid approach
+
+# Aspects to consider 
+
+    - interpretabilidade RQ2
+    - piping several algorithms to improve accuracy. Aka hybrid approach
 
