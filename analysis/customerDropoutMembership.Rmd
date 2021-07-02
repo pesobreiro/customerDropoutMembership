@@ -2,7 +2,7 @@
 title: |
   |
   |
-  | \vspace{1cm}Customer dropout membership*^[*Corresponding address: sobreiro@esdrm.ipsantarem.pt. The current template adapts part of the Rmd code by [Paul C. Bauer](https://github.com/paulcbauer/Writing_a_reproducable_paper_in_rmarkdown), Mannheim Centre for European Social Research.]\vspace{0.5cm}
+  | \vspace{1cm}Customer dropout membership^[Corresponding address: sobreiro@esdrm.ipsantarem.pt. The current template adapts part of the Rmd code by [Paul C. Bauer](https://github.com/paulcbauer/Writing_a_reproducable_paper_in_rmarkdown), Mannheim Centre for European Social Research.]\vspace{0.5cm}
   |
 author: |
   | Pedro Sobreiro, Javier Berrocal, Domingos Martinho, José Garcia Alonso
@@ -80,6 +80,23 @@ header-includes:
 #use_virtualenv("C:/Users/mangelo.EEG/Documents/python")
 ```
 
+# Introduction
+
+
+Research idea:
+
+- 
+
+Context:
+An organization membership located in portugal. The organization offers an annual membership
+for the members, the service subscription has several payment options:
+
+- Men with a annual fee of 10€
+- Women annual fee of 6€
+- Correspondent fee 6€
+- Retired fee 5€
+- Student fee 2.5€
+- under-14 fee 1€
 
 
 \clearpage
