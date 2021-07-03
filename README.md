@@ -31,11 +31,6 @@ The metric variables are transformed to categorical using the quartiles to provi
 comparison of groups. 
 The survival analysis was conducted using the package Lifelines (Davidson-Pilon et al., 2017).
 
-lifelines
-pysurvival: 
-
-
-
 # Artigo ascarza
 
 
