@@ -63,9 +63,6 @@ export CC=/usr/bin/gcc-8
 # install pysurvival after dependencies are resolved by conda
 pip install pysurvival
 
-
-jupyter lab --no-browser
-
 ```
 
 pip install pysurvival start the installation of serveral dependencies such:
