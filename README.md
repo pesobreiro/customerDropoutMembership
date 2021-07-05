@@ -106,6 +106,9 @@ to the actual value.
 
 ![Prediction accuracy](./analysis/predictionAccuracy.png)
 
+All the outputs are available [here](./analysis/01.survRandomForest.pdf)
+
+
 # Article Ascarza
 
 Ascarza, E. (2018). Retention Futility: Targeting High-Risk Customers Might be Ineffective. Journal of Marketing Research, 55(1), 80-98. sim. https://doi.org/10.1509/jmr.16.0163
