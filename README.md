@@ -74,6 +74,16 @@ pip install pysurvival
 
 ```
 
+# Running the model
+
+```
+from pysurvival.utils.display import correlation_matrix
+correlation_matrix(df[features], figure_size=(10,10), text_fontsize=8)
+```
+
+![image](./analysis/output.png)
+
+
 # Artigo ascarza
 
 
@@ -94,3 +104,4 @@ with the letter and a control group that received only the renewal latter.
     - The business objective is to increase the number of members and organization profits
     - piping several algorithms to improve accuracy. Aka hybrid approach
     -  
+
