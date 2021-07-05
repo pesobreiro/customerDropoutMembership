@@ -37,7 +37,6 @@ PySurvival is an open source python package for Survival Analysis modeling - the
 PySurvival is compatible with Python 2.7-3.7
 
 ```
-
 # create environment
 conda create --name survival python=3.7
 # activate environment
@@ -62,7 +61,6 @@ export CXX=/usr/bin/g++-8
 export CC=/usr/bin/gcc-8
 # install pysurvival after dependencies are resolved by conda
 pip install pysurvival
-
 ```
 
 pip install pysurvival start the installation of serveral dependencies such:
