@@ -83,6 +83,25 @@ correlation_matrix(df[features], figure_size=(10,10), text_fontsize=8)
 
 ![image](./analysis/output.png)
 
+## Removed the variables with greater correlations 
+
+```
+to_remove = ['totalJogos', 'idaEstadio']
+features = np.setdiff1d(features, to_remove).tolist()
+```
+
+## Model building
+
+The model was built with with 60% of the data for training and 40% for testing.
+The survival model parameters where:
+
+```
+from pysurvival.models.survival_forest import RandomSurvivalForestModel
+csf = RandomSurvivalForestModel(num_trees=200)
+csf.fit(X_train, T_train, E_train, max_features='sqrt', max_depth=5, min_node_size=20)
+```
+
+
 
 # Artigo ascarza
 
