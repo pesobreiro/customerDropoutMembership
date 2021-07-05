@@ -101,8 +101,12 @@ csf = RandomSurvivalForestModel(num_trees=200)
 csf.fit(X_train, T_train, E_train, max_features='sqrt', max_depth=5, min_node_size=20)
 ```
 
-# Artigo ascarza
+The model accuracy is very high in the first years. The prediction is very similar
+to the actual value.
 
+![Prediction accuracy](./analysis/predictionAccuracy.png)
+
+# Article Ascarza
 
 Ascarza, E. (2018). Retention Futility: Targeting High-Risk Customers Might be Ineffective. Journal of Marketing Research, 55(1), 80-98. sim. https://doi.org/10.1509/jmr.16.0163
 
@@ -121,4 +125,3 @@ with the letter and a control group that received only the renewal latter.
     - The business objective is to increase the number of members and organization profits
     - piping several algorithms to improve accuracy. Aka hybrid approach
     -  
-
