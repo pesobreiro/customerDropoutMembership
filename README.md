@@ -48,8 +48,11 @@ conda install -c conda-forge lifelines
 # install PySurvival
 # install c++ dependencies
 sudo apt install gcc-8 g++-8
+# edit .bashrc or .zshrc according the terminal used then source
+# e.g. source ~/.zshrc
 export CXX=/usr/bin/g++-8
 export CC=/usr/bin/gcc-8
+# install pysurvival
 pip install pysurvival
 
 
