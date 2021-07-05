@@ -81,7 +81,7 @@ from pysurvival.utils.display import correlation_matrix
 correlation_matrix(df[features], figure_size=(10,10), text_fontsize=8)
 ```
 
-![image](./analysis/output.png)
+![image](./analysis/correlationMatrix.png)
 
 ## Removed the variables with greater correlations 
 
