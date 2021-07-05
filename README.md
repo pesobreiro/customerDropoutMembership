@@ -57,12 +57,16 @@ jupyter lab --no-browser
 
 ```
 
+```
+
 @Misc{ pysurvival_cite,
   author = {Stephane Fotso and others},
   title = {{PySurvival}: Open source package for Survival Analysis modeling},
   year = {2019--},
   url = "https://www.pysurvival.io/"
 }
+
+```
 
 # Artigo ascarza
 
