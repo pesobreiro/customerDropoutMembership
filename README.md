@@ -33,10 +33,13 @@ The survival analysis was conducted using the package Lifelines (Davidson-Pilon 
 
 # Packages instalation
 
+PySurvival is an open source python package for Survival Analysis modeling - the modeling concept used to analyze or predict when an event is likely to happen. It is built upon the most commonly used machine learning packages such NumPy, SciPy and PyTorch.
+PySurvival is compatible with Python 2.7-3.7
+
 ```
 
 # create environment
-conda create --name survival
+conda create --name survival python=3.7
 # activate environment
 conda activate survival
 # package essentials
@@ -45,20 +48,32 @@ conda install -c conda-forge jupyterlab
 conda install -c conda-forge xlrd
 conda install -c conda-forge openpyxl
 conda install -c conda-forge lifelines
-# install PySurvival
+# install PySurvival dependencies
+conda install -c conda-forge numpy
+conda install -c conda-forge scipy
+conda install -c conda-forge scikit-learn
+conda install -c conda-forge pytorch
+
 # install c++ dependencies
 sudo apt install gcc-8 g++-8
 # edit .bashrc or .zshrc according the terminal used then source
 # e.g. source ~/.zshrc
 export CXX=/usr/bin/g++-8
 export CC=/usr/bin/gcc-8
-# install pysurvival
+# install pysurvival after dependencies are resolved by conda
 pip install pysurvival
 
 
 jupyter lab --no-browser
 
 ```
+
+pip install pysurvival start the installation of serveral dependencies such:
+
+- scipy 
+- scikit-learn
+- torch
+
 
 ```
 
