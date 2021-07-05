@@ -31,6 +31,39 @@ The metric variables are transformed to categorical using the quartiles to provi
 comparison of groups. 
 The survival analysis was conducted using the package Lifelines (Davidson-Pilon et al., 2017).
 
+# Packages instalation
+
+```
+
+# create environment
+conda create --name survival
+# activate environment
+conda activate survival
+# package essentials
+conda install -c conda-forge jupyter
+conda install -c conda-forge jupyterlab
+conda install -c conda-forge xlrd
+conda install -c conda-forge openpyxl
+conda install -c conda-forge lifelines
+# install PySurvival
+# install c++ dependencies
+sudo apt install gcc-8 g++-8
+export CXX=/usr/bin/g++-8
+export CC=/usr/bin/gcc-8
+pip install pysurvival
+
+
+jupyter lab --no-browser
+
+```
+
+@Misc{ pysurvival_cite,
+  author = {Stephane Fotso and others},
+  title = {{PySurvival}: Open source package for Survival Analysis modeling},
+  year = {2019--},
+  url = "https://www.pysurvival.io/"
+}
+
 # Artigo ascarza
 
 
