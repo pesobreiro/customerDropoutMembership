@@ -101,8 +101,6 @@ csf = RandomSurvivalForestModel(num_trees=200)
 csf.fit(X_train, T_train, E_train, max_features='sqrt', max_depth=5, min_node_size=20)
 ```
 
-
-
 # Artigo ascarza
 
 
