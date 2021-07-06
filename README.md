@@ -1,7 +1,7 @@
 # Customer dropout membership
 
 Context:
-An organization membership located in portugal. The organization offers an annual membership
+An organization membership located in Portugal. The organization offers an annual membership
 for the members, the service subscription has several payment options:
 
 - Men with a annual fee of 10€
@@ -19,9 +19,9 @@ The analysis is based on the use of random survival forests in the presence of c
 that do not necessarily satisfy the PH assumption. 
 Random Survival Forests does not make the proportional hazards assumption (Ehrlinger, 2016) 
 and has the flexibility to model survivor curves that are of dissimilar shapes for 
-contrastinggroups of subjects. Random Survival Forest is an extension of Random Forest 
+contrasting groups of subjects. Random Survival Forest is an extension of Random Forest 
 allowing efficient non-parametric analysis of time to event data (Breiman, 2001). 
-This characteristcs allow us to surpass the Cox Regression limitation of the proportional hazard
+This characteristics allow us to surpass the Cox Regression limitation of the proportional hazard
 assumption, requiring to exclude variables which not fullfill the model assumption. 
 It was shown by (Breiman, 2001) that ensemble learning can be further improved by injecting 
 randomization into the base learning process - a method called Random Forests.  
@@ -31,7 +31,7 @@ The metric variables are transformed to categorical using the quartiles to provi
 comparison of groups. 
 The survival analysis was conducted using the package Lifelines (Davidson-Pilon et al., 2017).
 
-# Packages instalation
+# Packages installation
 
 PySurvival is an open source python package for Survival Analysis modeling - the modeling concept used to analyze or predict when an event is likely to happen. It is built upon the most commonly used machine learning packages such NumPy, SciPy and PyTorch.
 PySurvival is compatible with Python 2.7-3.7
@@ -128,3 +128,12 @@ with the letter and a control group that received only the renewal latter.
     - The business objective is to increase the number of members and organization profits
     - piping several algorithms to improve accuracy. Aka hybrid approach
     -  
+
+# 
+
+# Other used tools
+
+ - [Visidata](https://www.visidata.org/) is a free, open-source tool that lets you quickly open, 
+ explore, summarize, and analyze datasets in your computer’s terminal
+
+

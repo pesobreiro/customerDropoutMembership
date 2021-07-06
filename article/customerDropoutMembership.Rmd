@@ -31,7 +31,7 @@ sansfont: Times New Roman
 fontsize: 12pt
 link-citations: true
 documentclass: article
-geometry: margin=1in
+geometry: margin = 1in
 always_allow_html: yes
 header-includes:
    - \usepackage{dcolumn}
@@ -41,19 +41,19 @@ header-includes:
 ---
 
 
-```{r Setup, include=FALSE}
+```{r Setup, include = FALSE}
    knitr::opts_chunk$set(cache = FALSE)
-   # Use chache = TRUE if you want to speed up compilation
+   # Use cache = TRUE if you want to speed up compilation
    # set path
    # get rmarkdown directory
-   caminho<-getwd()
+   caminho <- getwd()
    # set working directory
    setwd(caminho)
    print(caminho)
 
    # A function to allow for showing some of the inline code
-   rinline <- function(code){
-     html <- '<code  class="r">``` `r CODE` ```</code>'
+   rinline <- function(code) {
+     html <- '<code  class = "r">``` `r CODE` ```</code>'
      sub("CODE", code, html)
 
      ##https://opensource.com/article/19/5/python-3-default-mac
@@ -66,7 +66,7 @@ header-includes:
 
    ##use_virtualenv("C:/Users/mangelo.EEG/Documents/python")
 
-   ##knitr::opts_chunk$set(python.reticulate=FALSE)
+   ##knitr::opts_chunk$set(python.reticulate = FALSE)
 
    # library(devtools) # before this you may need to install devtools
    # install_github("hemken/Statamarkdown")
@@ -74,7 +74,7 @@ header-includes:
    }
 ```
 
-```{r RETICULATE,echo=FALSE}
+```{r RETICULATE,echo = FALSE}
 #Sys.setenv(RETICULATE_PYTHON = "C:/Program Files/Python39/python.exe")
 #library(reticulate)
 #use_virtualenv("C:/Users/mangelo.EEG/Documents/python")
@@ -88,7 +88,7 @@ Research idea:
 - 
 
 Context:
-An organization membership located in portugal. The organization offers an annual membership
+An organization membership located in Portugal. The organization offers an annual membership
 for the members, the service subscription has several payment options:
 
 - Men with a annual fee of 10€
@@ -109,23 +109,23 @@ for the members, the service subscription has several payment options:
 
 
 
-```{r Stats, echo=TRUE, message=FALSE}
+```{r Stats, echo = TRUE, message = FALSE}
 library(dplyr)
 library(dlookr)
 library(ggplot2)
 
-##eda_report(nlswork,output_dir = "C:/Users/mangelo.EEG/Documents/GitHub/prjs/reports/",output_file = "eda_report.pdf")
+#eda_report(nlswork,output_dir  = 
+#	"C:/Users/mangelo.EEG/Documents/GitHub/prjs/reports/",
+#	output_file = "eda_report.pdf")
 
 ## The data
 
 names(airquality)
-##summary(nlswork)
+#summary(nlswork)
 
 ## Missing values
-
 library(visdat)
 vis_dat(airquality)
-
 
 library(naniar)
 vis_miss(airquality)
@@ -151,7 +151,7 @@ describe(airquality)
 
 ```
 
-The average age in our data is `r round(mean(airquality$Temp,na.rm=TRUE),1)`.
+The average age in our data is `r round(mean(airquality$Temp,na.rm = TRUE),1)`.
 
 # Tables {#sec:tables}
 R Markdown PDF is now able to produce good tables with our output. For `stargazer` the label is contained in the function, while for `kable` it's contained in the chunk name.
@@ -161,29 +161,29 @@ R Markdown PDF is now able to produce good tables with our output. For `stargaze
 Table \@ref(tab1) shows data's summary statistics.^[You can reference the table as \@ref(tab1cars).] `stargazer()` is and excellent solution to export outputs.
 
 
-```{r Export Stats, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE, results="asis"}
+```{r Export Stats, echo = TRUE, message = FALSE, warning = FALSE, paged.print = FALSE, results = "asis"}
 library(stargazer)
 stargazer(cars,
           title = "Summary table with stargazer",
-          label="tab1cars",
+          label = "tab1cars",
           table.placement = "h",
-          header=FALSE)
+          header = FALSE)
 ```
 
 Table \@ref(tab2) reports regression outputs. Name the models as you can refer to their names in the text (M1, M2, M3).
 
-```{r Export Regressions, echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE, results="asis"}
+```{r Export Regressions, echo = TRUE, message = FALSE, warning = FALSE, paged.print = FALSE, results = "asis"}
 library(stargazer)
 model1 <- lm(speed ~ dist, data = cars)
 model2 <- lm(speed ~ dist, data = cars)
 model3 <- lm(dist ~ speed, data = cars)
 stargazer(model1, model2, model3,
           title = "Regression table with stargazer",
-          label="tab2",
+          label = "tab2",
           table.placement = "h",
           column.labels = c("M1", "M2", "M3"),
           model.numbers = FALSE,
-          header=FALSE)
+          header = FALSE)
 ```
 
 # Figures
@@ -191,7 +191,7 @@ stargazer(model1, model2, model3,
 ## Graphs with R
 You can insert figures like this. One would like to produce and insert them on the fly in the `.rmd` file. Figure \@ref(fig:fig-1) is such an example.
 
-```{r Figures 1, fig-1, fig.align="center", fig.cap="Scatterplot of Speed and Distance", fig.pos="h", message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Figures 1, fig-1, fig.align = "center", fig.cap = "Scatterplot of Speed and Distance", fig.pos = "h", message = FALSE, warning = FALSE, paged.print = FALSE}
 plot(cars$speed, cars$dist)
 ```
 
@@ -200,22 +200,27 @@ However, in some cases it does not work.
 ## Example: ggplot2 graphs
 See the `ggplot2` output reported in Figure \@ref(fig:fig-2).
 
-```{r Fig-2, fig.align="center", fig.cap="Miles per gallon according to the weight", fig.pos="h", fig.width=6, fig.height=3, message=FALSE, warning=FALSE, paged.print=FALSE}
+```{r Fig-2, fig.align = "center", fig.cap = "Miles per gallon according to the weight", fig.pos = "h", fig.width = 6, fig.height = 3, message = FALSE, warning = FALSE, paged.print = FALSE}
 mtcars$cyl <- as.factor(mtcars$cyl) # Convert cyl to factor
 library(ggplot2)
-ggplot(mtcars, aes(x=wt, y=mpg, shape=cyl)) + geom_point() +
-  labs(x="Weight (lb/1000)", y = "Miles/(US) gallon",
-       shape="Number of \n Cylinders") + theme_classic()
+ggplot(mtcars, aes(x = wt, y = mpg, shape = cyl)) + geom_point() +
+  labs(x = "Weight (lb/1000)", y = "Miles/(US) gallon",
+       shape = "Number of \n Cylinders") + theme_classic()
 ```
 
 ## Another example using Plotly
-With `Plotly` we can produce interactive graphs which play well, for example, once can embeded in html webpages (drop by  [here](https://paulcbauer.shinyapps.io/visualizing-causal-scenarios/) for an example). One can insert this type of graphs in R Markdown PDF using `Orca` (it generates static images from Plotly graphs). Go [here](https://github.com/plotly/orca#installation) to check how to install it. See Figure \@ref(fig:fig-3) for an example.
+With `Plotly` we can produce interactive graphs which play well, for example, once can embedded 
+in html webpages (drop by  [here](https://paulcbauer.shinyapps.io/visualizing-causal-scenarios/) 
+for an example). One can insert this type of graphs in R Markdown PDF using `Orca` (it generates 
+static images from Plotly graphs). 
+Go [here](https://github.com/plotly/orca#installation) to check how to install it. 
+See Figure \@ref(fig:fig-3) for an example.
 
-```{r Fig-3, message=FALSE, warning=FALSE}
+```{r Fig-3, message = FALSE, warning = FALSE}
 library(plotly)
-p <- plot_ly(cars, type = "scatter", mode="markers",
-        x=~speed,
-        y=~dist)
+p <- plot_ly(cars, type = "scatter", mode = "markers",
+        x = ~speed,
+        y = ~dist)
 #Sys.setenv('MAPBOX_TOKEN' = '12423423') # set arbitrary token
 #orca(p, "logs/plotly-plot.pdf")
 ```
@@ -224,7 +229,7 @@ p <- plot_ly(cars, type = "scatter", mode="markers",
 \begin{figure}[ht]
 \centering
 \caption{Example: export a Plotly figure using `orca`}\label{fig:fig-3}
-		\includegraphics[width=0.9\linewidth]{../figures/teste.png}
+	\includegraphics[width = 0.9\linewidth]{../figures/teste.png}
 \begin{flushleft}
 \end{flushleft}
 \end{figure}
@@ -265,7 +270,7 @@ $$
 or
 
 \begin{equation}
-f\left(k\right)=\binom{n}{k}p^k\left(1-p\right)^{n-k} \label{eq:binom}
+f\left(k\right) = \binom{n}{k}p^k\left(1-p\right)^{n-k} \label{eq:binom}
 \end{equation}
 
 
@@ -280,13 +285,13 @@ y_{ijt} = \beta x_{ijt} + \eta_i + \gamma_j + \lambda_t + \varepsilon_{ijt}
 
 
 
-```{r echo=TRUE, message=FALSE, warning=FALSE, paged.print=FALSE, results="asis"}
+```{r echo = TRUE, message = FALSE, warning = FALSE, paged.print = FALSE, results = "asis"}
 library(stargazer)
 stargazer(cars,
           title = "Summary 24",
-          label="tab24",
+          label = "tab24",
           table.placement = "ht",
-          header=FALSE)
+          header = FALSE)
 ```
 
 
@@ -299,7 +304,7 @@ Check the replication package for Bonhomme, Lamadon and Manresa (2019): https://
 # References {-}
 
 
-<div id="refs"></div>
+<div id = "refs"></div>
 
 
 # Appendix: Chunk options {-}
@@ -308,8 +313,8 @@ Check the replication package for Bonhomme, Lamadon and Manresa (2019): https://
 
 ### R
 
-```{r fig-versioning, echo=TRUE}
-cat(paste("#", capture.output(sessionInfo()), "\n", collapse =""))
+```{r fig-versioning, echo = TRUE}
+cat(paste("#", capture.output(sessionInfo()), "\n", collapse  = ""))
   # or use message() instead of cat()
 ```
 
