@@ -142,8 +142,8 @@ with the letter and a control group that received only the renewal latter.
 
 # Other used tools
 
- - [Visidata](https://www.visidata.org/) is a free, open-source tool that lets you quickly open, 
- explore, summarize, and analyze datasets in your computer’s terminal
+ - [Visidata](https://www.visidata.org/) for quick exploratory. VisiData is a free, open-source tool 
+ that lets you quickly open, explore, summarize, and analyze datasets in your computer’s terminal.
 
 ---
 bibliography: references.bib
