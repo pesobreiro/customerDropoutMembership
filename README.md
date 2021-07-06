@@ -5,7 +5,7 @@ date: 27-06-2021
 abstract: Prediction of customer dropout with contractual settings
 ---
 
-# Customer dropout membership
+# Customer dropout membership :+1:
 
 Context:
 An organization membership located in Portugal. The organization offers an annual membership
