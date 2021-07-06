@@ -1,3 +1,10 @@
+---
+title: Customer dropout membership
+author: Pedro Sobreiro
+date: 27-06-2021
+abstract: Prediction of customer dropout with contractual settings
+---
+
 # Customer dropout membership
 
 Context:
@@ -111,6 +118,8 @@ All the outputs are available [here](./analysis/01.survRandomForest.pdf)
 
 # Article Ascarza
 
+- Retention Futility: Targeting High-Risk Customers Might be Ineffective [@Ascarza_2018]
+
 Ascarza, E. (2018). Retention Futility: Targeting High-Risk Customers Might be Ineffective. Journal of Marketing Research, 55(1), 80-98. sim. https://doi.org/10.1509/jmr.16.0163
 
 
@@ -136,4 +145,10 @@ with the letter and a control group that received only the renewal latter.
  - [Visidata](https://www.visidata.org/) is a free, open-source tool that lets you quickly open, 
  explore, summarize, and analyze datasets in your computer’s terminal
 
+---
+bibliography: references.bib
+nocite: '@*'
+...
+
+# Bibliography
 
