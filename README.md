@@ -5,7 +5,7 @@ date: 27-06-2021
 abstract: Prediction of customer dropout with contractual settings
 ---
 
-# Customer dropout membership :technologist: :+1: :moneybag: :chart_with_upwards_trend:
+# Customer dropout membership :technologist: :moneybag: :chart_with_upwards_trend:
 
 Context:
 An organization membership located in Portugal. The organization offers an annual membership
