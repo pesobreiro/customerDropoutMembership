@@ -29,7 +29,7 @@ and has the flexibility to model survivor curves that are of dissimilar shapes f
 contrasting groups of subjects. Random Survival Forest is an extension of Random Forest 
 allowing efficient non-parametric analysis of time to event data [@Breiman_2001].
 This characteristics allow us to surpass the Cox Regression limitation of the proportional hazard
-assumption, requiring to exclude variables which not fullfill the model assumption. 
+assumption, requiring to exclude variables which not fulfill the model assumption. 
 It was shown by @Breiman_2001 that ensemble learning can be further improved by injecting 
 randomization into the base learning process - a method called Random Forests.  
 The random survival forest was developed using the package PySurvival [@Fotso_others_2019].
