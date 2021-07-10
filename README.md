@@ -3,6 +3,7 @@ title: Customer dropout membership
 author: Pedro Sobreiro
 date: 27-06-2021
 abstract: Prediction of customer dropout with contractual settings
+bibliography: "references.bib"
 ---
 
 # Customer dropout membership :technologist: :moneybag: :chart_with_upwards_trend:
@@ -71,14 +72,12 @@ pip install pysurvival
 ```
 
 ```
-
 @Misc{ pysurvival_cite,
   author = {Stephane Fotso and others},
   title = {{PySurvival}: Open source package for Survival Analysis modeling},
   year = {2019--},
   url = "https://www.pysurvival.io/"
 }
-
 ```
 
 # Running the model
@@ -145,10 +144,4 @@ with the letter and a control group that received only the renewal latter.
  - [Visidata](https://www.visidata.org/) for quick exploratory. VisiData is a free, open-source tool 
  that lets you quickly open, explore, summarize, and analyze datasets in your computer’s terminal.
 
----
-bibliography: references.bib
-nocite: '@*'
-...
-
 # Bibliography
-
