@@ -3,7 +3,7 @@ title: Customer dropout membership
 author: Pedro Sobreiro
 date: 27-06-2021
 abstract: Prediction of customer dropout with contractual settings
-geometry: "left=3cm,right=3cm,top=2cm,bottom=2cm"
+geometry: "left=2cm,right=2cm,top=2cm,bottom=2cm"
 bibliography: "refMembership.bib"
 ---
 
