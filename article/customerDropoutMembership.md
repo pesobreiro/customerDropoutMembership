@@ -275,7 +275,9 @@ Surprisingly, the analyzed studies did not address the customer lifetime value a
 In this section, we present our experiments to validate the proposed models, comparing against
 other approaches. 
 
-
+|     Model name   | Explored hyper-parameters' values                    | Best parameters |
+| ---------------- | ---------------------------------------------------- | --------------- |
+| SurvivaL trees   |                                                      |                 |  
 
 # Other used tools
 
