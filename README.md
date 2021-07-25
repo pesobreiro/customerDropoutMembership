@@ -72,6 +72,18 @@ export CC=/usr/bin/gcc-8
 pip install pysurvival
 ```
 
+Windows installation requires some changes.
+Followed this [link](https://github.com/square/pysurvival/issues/8)
+Install visual studio build tools [here](https://aka.ms/buildtools)
+
+![img](./figures/png_2142357625300655111.png)
+
+```python
+git clone https://github.com/bacalfa/pysurvival.git
+python setup.py build_ext --inplace
+python setup.py install --user
+```
+
 ```
 @Misc{ pysurvival_cite,
   author = {Stephane Fotso and others},
@@ -80,6 +92,32 @@ pip install pysurvival
   url = "https://www.pysurvival.io/"
 }
 ```
+
+# Installing in reticulate
+
+virtualenv_create("artigosurvival",python_version="3.7.10")
+use_virtualenv("artigosurvival", required = TRUE)
+
+virtualenv_install("artigosurvival", "pysurvival")
+
+pandas requirement
+virtualenv_install("artigosurvival", "xlrd")
+
+
+```{python Py,eval=TRUE,echo=TRUE}
+from pysurvival.utils.display import correlation_matrix
+import pandas as pd
+
+# some problems in linux need to add openpyxl to read excel file
+df = pd.read_excel('../data/membershipData.xlsx',index_col=0,engine = 'openpyxl')
+
+correlation_matrix(df, figure_size=(10,10), text_fontsize=8)
+print('olá mundo')
+```
+
+
+
+
 
 # Running the model
 

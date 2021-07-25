@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.6.23)  15 JUL 2021 11:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.6.23)  22 JUL 2021 12:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -299,7 +299,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 File: bkm-pdftex.def 2019/12/03 v1.28 bookmark driver for pdfTeX (HO)
 \BKM@id=\count267
 ))
-Package hyperref Info: Option `colorlinks' set `true' on input line 65.
+Package hyperref Info: Option `colorlinks' set `true' on input line 49.
 (/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2020/01/02 v5.9 Page Geometry
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifvtex.sty
@@ -345,37 +345,33 @@ Package graphics Info: Driver file: pdftex.def on input line 105.
 )
 \Gin@req@height=\dimen161
 \Gin@req@width=\dimen162
-)
-\cslhangindent=\skip55
-\csllabelwidth=\skip56
-\cslentryspacingunit=\skip57
-(/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
-Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count274
-\calc@Bcount=\count275
-\calc@Adimen=\dimen163
-\calc@Bdimen=\dimen164
-\calc@Askip=\skip58
-\calc@Bskip=\skip59
-LaTeX Info: Redefining \setlength on input line 80.
-LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count276
-\calc@Cskip=\skip60
 ) (/usr/share/texlive/texmf-dist/tex/latex/tools/dcolumn.sty
 Package: dcolumn 2014/10/28 v1.06 decimal alignment package (DPC)
 (/usr/share/texlive/texmf-dist/tex/latex/tools/array.sty
 Package: array 2019/08/31 v2.4l Tabular extension package (FMi)
-\col@sep=\dimen165
+\col@sep=\dimen163
 \ar@mcellbox=\box48
-\extrarowheight=\dimen166
+\extrarowheight=\dimen164
 \NC@list=\toks24
-\extratabsurround=\skip61
-\backup@length=\skip62
+\extratabsurround=\skip55
+\backup@length=\skip56
 \ar@cellbox=\box49
 )) (/usr/share/texlive/texmf-dist/tex/latex/pdfpages/pdfpages.sty
 Package: pdfpages 2020/01/28 v0.5q Insert pages of external PDF documents (AM)
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+) (/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
+Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count274
+\calc@Bcount=\count275
+\calc@Adimen=\dimen165
+\calc@Bdimen=\dimen166
+\calc@Askip=\skip57
+\calc@Bskip=\skip58
+LaTeX Info: Redefining \setlength on input line 80.
+LaTeX Info: Redefining \addtolength on input line 81.
+\calc@Ccount=\count276
+\calc@Cskip=\skip59
 ) (/usr/share/texlive/texmf-dist/tex/latex/eso-pic/eso-pic.sty
 Package: eso-pic 2018/04/12 v2.0h eso-pic (RN)
 )
@@ -390,164 +386,42 @@ File: pppdftex.def 2020/01/28 v0.5q Pdfpages driver for pdfTeX (AM)
 \AM@toc@title=\toks26
 \c@AM@survey=\count278
 \AM@templatesizebox=\box51
-) (/usr/share/texlive/texmf-dist/tex/latex/booktabs/booktabs.sty
-Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen169
-\lightrulewidth=\dimen170
-\cmidrulewidth=\dimen171
-\belowrulesep=\dimen172
-\belowbottomsep=\dimen173
-\aboverulesep=\dimen174
-\abovetopsep=\dimen175
-\cmidrulesep=\dimen176
-\cmidrulekern=\dimen177
-\defaultaddspace=\dimen178
-\@cmidla=\count279
-\@cmidlb=\count280
-\@aboverulesep=\dimen179
-\@belowrulesep=\dimen180
-\@thisruleclass=\count281
-\@lastruleclass=\count282
-\@thisrulewidth=\dimen181
-) (/usr/share/texlive/texmf-dist/tex/latex/tools/longtable.sty
-Package: longtable 2020/01/07 v4.13 Multi-page Table package (DPC)
-\LTleft=\skip63
-\LTright=\skip64
-\LTpre=\skip65
-\LTpost=\skip66
-\LTchunksize=\count283
-\LTcapwidth=\dimen182
-\LT@head=\box52
-\LT@firsthead=\box53
-\LT@foot=\box54
-\LT@lastfoot=\box55
-\LT@cols=\count284
-\LT@rows=\count285
-\c@LT@tables=\count286
-\c@LT@chunks=\count287
-\LT@p@ftn=\toks27
-) (/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
-Package: multirow 2019/05/31 v2.5 Span multiple rows of a table
-\multirow@colwidth=\skip67
-\multirow@cntb=\count288
-\multirow@dima=\skip68
-\bigstrutjot=\dimen183
-) (/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty
-\wrapoverhang=\dimen184
-\WF@size=\dimen185
-\c@WF@wrappedlines=\count289
-\WF@box=\box56
-\WF@everypar=\toks28
-Package: wrapfig 2003/01/31  v 3.6
-) (/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
-Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count290
-\float@exts=\toks29
-\float@box=\box57
-\@float@everytoks=\toks30
-\@floatcapt=\box58
-) (/usr/share/texlive/texmf-dist/tex/latex/colortbl/colortbl.sty
-Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
-\everycr=\toks31
-\minrowclearance=\skip69
-) (/usr/share/texlive/texmf-dist/tex/latex/pdflscape/pdflscape.sty
-Package: pdflscape 2019/12/05 v0.12 Display of landscape pages in PDF (HO)
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/lscape.sty
-Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
 )
-Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
-) (/usr/share/texlive/texmf-dist/tex/latex/tabu/tabu.sty
-Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed) + inter
-mediate FMi
-(/usr/share/texlive/texmf-dist/tex/latex/varwidth/varwidth.sty
-Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box59
-\sift@deathcycles=\count291
-\@vwid@loff=\dimen186
-\@vwid@roff=\dimen187
-)
-\c@taburow=\count292
-\tabu@nbcols=\count293
-\tabu@cnt=\count294
-\tabu@Xcol=\count295
-\tabu@alloc=\count296
-\tabu@nested=\count297
-\tabu@target=\dimen188
-\tabu@spreadtarget=\dimen189
-\tabu@naturalX=\dimen190
-\tabucolX=\dimen191
-\tabu@Xsum=\dimen192
-\extrarowdepth=\dimen193
-\abovetabulinesep=\dimen194
-\belowtabulinesep=\dimen195
-\tabustrutrule=\dimen196
-\tabu@thebody=\toks32
-\tabu@footnotes=\toks33
-\tabu@box=\box60
-\tabu@arstrutbox=\box61
-\tabu@hleads=\box62
-\tabu@vleads=\box63
-\tabu@cellskip=\skip70
-) (/usr/share/texlive/texmf-dist/tex/latex/threeparttable/threeparttable.sty
-Package: threeparttable 2003/06/13  v 3.0
-\@tempboxb=\box64
-) (/usr/share/texlive/texmf-dist/tex/latex/threeparttablex/threeparttablex.sty
-Package: threeparttablex 2013/07/23 v0.3 by daleif
-(/usr/share/texlive/texmf-dist/tex/latex/environ/environ.sty
-Package: environ 2014/05/04 v0.3 A new way to define environments
-(/usr/share/texlive/texmf-dist/tex/latex/trimspaces/trimspaces.sty
-Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
-))
-\TPTL@width=\skip71
-) (/usr/share/texlive/texmf-dist/tex/generic/ulem/ulem.sty
-\UL@box=\box65
-\UL@hyphenbox=\box66
-\UL@skip=\skip72
-\UL@hook=\toks34
-\UL@height=\dimen197
-\UL@pe=\count298
-\UL@pixel=\dimen198
-\ULC@box=\box67
-Package: ulem 2019/11/18
-\ULdepth=\dimen199
-) (/usr/share/texlive/texmf-dist/tex/latex/makecell/makecell.sty
-Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen256
-\c@nlinenum=\count299
-\TeXr@lab=\toks35
-) (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
+\cslhangindent=\skip60
+\csllabelwidth=\skip61
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdfmode.def
 File: l3backend-pdfmode.def 2020-02-03 L3 backend support: PDF mode
-\l__kernel_color_stack_int=\count300
-\l__pdf_internal_box=\box68
+\l__kernel_color_stack_int=\count279
+\l__pdf_internal_box=\box52
 ) (./customerDropoutMembership.aux)
 \openout1 = `customerDropoutMembership.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 170.
-LaTeX Font Info:    ... okay on input line 170.
-LaTeX Info: Redefining \microtypecontext on input line 170.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 153.
+LaTeX Font Info:    ... okay on input line 153.
+LaTeX Info: Redefining \microtypecontext on input line 153.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 170.
+LaTeX Info: Redefining \showhyphens on input line 153.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -556,17 +430,17 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 (RS)
 ) (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count301
-\scratchdimen=\dimen257
-\scratchbox=\box69
-\nofMPsegments=\count302
-\nofMParguments=\count303
-\everyMPshowfont=\toks36
-\MPscratchCnt=\count304
-\MPscratchDim=\dimen258
-\MPnumerator=\count305
-\makeMPintoPDFobject=\count306
-\everyMPtoPDFconversion=\toks37
+\scratchcounter=\count280
+\scratchdimen=\dimen169
+\scratchbox=\box53
+\nofMPsegments=\count281
+\nofMParguments=\count282
+\everyMPshowfont=\toks27
+\MPscratchCnt=\count283
+\MPscratchDim=\dimen170
+\MPnumerator=\count284
+\makeMPintoPDFobject=\count285
+\everyMPtoPDFconversion=\toks28
 ) (/usr/share/texlive/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -575,8 +449,8 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box70
-Package hyperref Info: Link coloring ON on input line 170.
+\AtBeginShipoutBox=\box54
+Package hyperref Info: Link coloring ON on input line 153.
 (/usr/share/texlive/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 (/usr/share/texlive/texmf-dist/tex/latex/refcount/refcount.sty
@@ -584,11 +458,11 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ) (/usr/share/texlive/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count307
+\c@section@level=\count286
 )
-LaTeX Info: Redefining \ref on input line 170.
-LaTeX Info: Redefining \pageref on input line 170.
-LaTeX Info: Redefining \nameref on input line 170.
+LaTeX Info: Redefining \ref on input line 153.
+LaTeX Info: Redefining \pageref on input line 153.
+LaTeX Info: Redefining \nameref on input line 153.
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -623,40 +497,47 @@ LaTeX Info: Redefining \nameref on input line 170.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+(/usr/share/texlive/texmf-dist/tex/latex/pdflscape/pdflscape.sty
+Package: pdflscape 2019/12/05 v0.12 Display of landscape pages in PDF (HO)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
+)
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
-72.
+55.
 (/usr/share/texmf/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-72.
+55.
 (/usr/share/texmf/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-172.
+155.
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-172.
+155.
 (/usr/share/texmf/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <20.74> on input line 172.
+(Font)              <20.74> on input line 155.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 172.
+(Font)              <14.4> on input line 155.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 172.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 172
+(Font)              <12> on input line 155.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 155
 .
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 172
+LaTeX Font Info:    Trying to load font information for U+msb on input line 155
 .
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -664,29 +545,29 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-72.
+55.
 (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 172.
+(Font)              <10> on input line 155.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 172.
+(Font)              <7> on input line 155.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 172.
+(Font)              <5> on input line 155.
 [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] [2]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 2
-16.
+00.
 (/usr/share/texmf/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 225.
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 209.
 
 LaTeX Font Warning: Font shape `T1/lmtt/bx/it' in size <12> not available
-(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 225.
+(Font)              Font shape `T1/lmtt/b/sl' tried instead on input line 209.
 
 <customerDropoutMembership_files/figure-latex/Stats-1.pdf, id=24, 469.755pt x 3
 25.215pt>
@@ -694,7 +575,7 @@ File: customerDropoutMembership_files/figure-latex/Stats-1.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Stats-1.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Stats-1.p
-df  used on input line 245.
+df  used on input line 229.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [3
 
@@ -706,7 +587,7 @@ File: customerDropoutMembership_files/figure-latex/Stats-2.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Stats-2.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Stats-2.p
-df  used on input line 254.
+df  used on input line 238.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <customerDropoutMembership_files/figure-latex/Stats-3.pdf, id=39, 469.755pt x 3
 25.215pt>
@@ -714,7 +595,7 @@ File: customerDropoutMembership_files/figure-latex/Stats-3.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Stats-3.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Stats-3.p
-df  used on input line 262.
+df  used on input line 246.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [4 <./customerDropoutMembership_files/figure-latex/Stats-2.pdf>]
 <customerDropoutMembership_files/figure-latex/Stats-4.pdf, id=50, 469.755pt x 3
@@ -723,7 +604,7 @@ File: customerDropoutMembership_files/figure-latex/Stats-4.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Stats-4.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Stats-4.p
-df  used on input line 282.
+df  used on input line 266.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [5 <./customerDropoutMembership_files/figure-latex/Stats-3.pdf>]
 <customerDropoutMembership_files/figure-latex/Stats-5.pdf, id=64, 469.755pt x 3
@@ -732,7 +613,7 @@ File: customerDropoutMembership_files/figure-latex/Stats-5.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Stats-5.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Stats-5.p
-df  used on input line 290.
+df  used on input line 274.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [6 <./customerDropoutMembership_files/figure-latex/Stats-4.pdf>]
 <customerDropoutMembership_files/figure-latex/Stats-6.pdf, id=75, 469.755pt x 3
@@ -741,7 +622,7 @@ File: customerDropoutMembership_files/figure-latex/Stats-6.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Stats-6.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Stats-6.p
-df  used on input line 299.
+df  used on input line 283.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [7 <./customerDropoutMembership_files/figure-latex/Stats-5.pdf>]
 <customerDropoutMembership_files/figure-latex/Stats-7.pdf, id=86, 469.755pt x 3
@@ -750,31 +631,25 @@ File: customerDropoutMembership_files/figure-latex/Stats-7.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Stats-7.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Stats-7.p
-df  used on input line 309.
+df  used on input line 293.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [8 <./customerDropoutMembership_files/figure-latex/Stats-6.pdf>] [9 <./customer
 DropoutMembership_files/figure-latex/Stats-7.pdf>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 357.
+(Font)              <8> on input line 341.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 357.
+(Font)              <6> on input line 341.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[10pdfTeX warning (ext4): destination with the same identifier (name{table.1}) 
-has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.447 \begin{Shaded}
-                    ]
+[10]
 <customerDropoutMembership_files/figure-latex/Figures 1, fig-1-1.pdf, id=119, 4
 69.755pt x 325.215pt>
 File: customerDropoutMembership_files/figure-latex/Figures 1, fig-1-1.pdf Graph
 ic file (type pdf)
 <use customerDropoutMembership_files/figure-latex/Figures 1, fig-1-1.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Figures 1
-, fig-1-1.pdf  used on input line 455.
+, fig-1-1.pdf  used on input line 439.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -785,73 +660,42 @@ File: customerDropoutMembership_files/figure-latex/Fig-2-1.pdf Graphic file (ty
 pe pdf)
 <use customerDropoutMembership_files/figure-latex/Fig-2-1.pdf>
 Package pdftex.def Info: customerDropoutMembership_files/figure-latex/Fig-2-1.p
-df  used on input line 481.
+df  used on input line 465.
 (pdftex.def)             Requested size: 433.63878pt x 216.81938pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[11pdfTeX warning (ext4): destination with the same identifier (name{table.2}) 
-has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.499 
-      ]
+[11]
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-506.
+490.
 (/usr/share/texmf/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 <../figures/teste.png, id=139, 469.755pt x 722.7pt>
 File: ../figures/teste.png Graphic file (type png)
 <use ../figures/teste.png>
-Package pdftex.def Info: ../figures/teste.png  used on input line 514.
+Package pdftex.def Info: ../figures/teste.png  used on input line 498.
 (pdftex.def)             Requested size: 422.7756pt x 650.42398pt.
 
-LaTeX Warning: Float too large for page by 36.09377pt on input line 517.
+LaTeX Warning: Float too large for page by 36.09377pt on input line 501.
 
-[12pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
- has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.540 \[
-        \int_0^{2\pi} \sin x~dx\] <./customerDropoutMembership_files/figure-lat
-ex/Figures 1, fig-1-1.pdf>] [13pdfTeX warning (ext4): destination with the same
- identifier (name{figure.2}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.565 \begin{Shaded}
-                     <./customerDropoutMembership_files/figure-latex/Fig-2-1.pd
-f>] [14pdfTeX warning (ext4): destination with the same identifier (name{table.
-3}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.596 \newpage
-              ] [15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 693.
-[16] [17pdfTeX warning (ext4): destination with the same identifier (name{figur
-e.3}) has been already used, duplicate ignored
-
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.693 \end{document}
-                     <../figures/teste.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 693.
+[12 <./customerDropoutMembership_files/figure-latex/Figures 1, fig-1-1.pdf>] [1
+3 <./customerDropoutMembership_files/figure-latex/Fig-2-1.pdf>] [14] [15]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 677.
+[16] [17 <../figures/teste.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 677.
 (./customerDropoutMembership.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 693.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 693.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 677.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 677.
  ) 
 Here is how much of TeX's memory you used:
- 16418 strings out of 483107
- 243012 string characters out of 5964630
- 563359 words of memory out of 5000000
- 31004 multiletter control sequences out of 15000+600000
- 618679 words of font info for 111 fonts, out of 8000000 for 9000
+ 14592 strings out of 483107
+ 216770 string characters out of 5964630
+ 520525 words of memory out of 5000000
+ 29233 multiletter control sequences out of 15000+600000
+ 618573 words of font info for 110 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
- 41i,11n,42p,824b,465s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 41i,10n,42p,824b,465s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dv
 ips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/s
 hare/texmf/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/share/texmf/fonts/enc/dvips/lm/l
@@ -866,7 +710,7 @@ lmr8.pfb></usr/share/texmf/fonts/type1/public/lm/lmri12.pfb></usr/share/texmf/f
 onts/type1/public/lm/lmsy10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy8.p
 fb></usr/share/texmf/fonts/type1/public/lm/lmtko10.pfb></usr/share/texmf/fonts/
 type1/public/lm/lmtt12.pfb></usr/share/texmf/fonts/type1/public/lm/lmtti10.pfb>
-Output written on customerDropoutMembership.pdf (17 pages, 464117 bytes).
+Output written on customerDropoutMembership.pdf (17 pages, 464652 bytes).
 PDF statistics:
  327 PDF objects out of 1000 (max. 8388607)
  267 compressed objects within 3 object streams

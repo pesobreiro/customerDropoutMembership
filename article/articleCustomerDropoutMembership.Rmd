@@ -1,0 +1,398 @@
+---
+title: |
+  |
+  |
+  |
+  | \vspace{1cm}Customer dropout membership^[Corresponding address: sobreiro@esdrm.ipsantarem.pt. The current template adapts part of the Rmd code by [Paul C. Bauer](https://github.com/paulcbauer/Writing_a_reproducable_paper_in_rmarkdown), Mannheim Centre for European Social Research.]\vspace{0.5cm}
+author: |
+  | Pedro Sobreiro, Javier Berrocal, Domingos Martinho, José Garcia Alonso
+  |
+  | Extremadura University
+  |
+date: |
+  |
+  |
+  | `r gsub("^0", "", format(Sys.time(), "%d %B, %Y"))`
+  |
+  |
+linestretch: 1.2
+colorlinks: true
+abstract: \noindent\setstretch{1}Abstract of the article. Here we can place more info.\vspace{.8cm}
+bibliography: references.bib
+csl: american-sociological-association.csl
+output:
+  bookdown::pdf_document2:
+    includes:
+    toc: no
+    keep_tex: true
+    latex_engine: xelatex
+mainfont: Times New Roman
+sansfont: Times New Roman
+fontsize: 12pt
+link-citations: true
+documentclass: article
+geometry: margin = 1in
+always_allow_html: yes
+header-includes:
+   - \usepackage{dcolumn}
+   - \usepackage{color}
+   - \usepackage{pdfpages}
+   - \usepackage{amsmath}
+   - \usepackage{booktabs}
+   - \usepackage{makecell}
+   - \usepackage{hyperref}
+editor_options: 
+  markdown: 
+    wrap: 80
+---
+
+```{r Setup, include = FALSE}
+knitr::opts_chunk$set(cache = FALSE)
+# Use cache = TRUE if you want to speed up compilation
+# set path
+# get rmarkdown directory
+caminho <- getwd()
+# set working directory
+setwd(caminho)
+print(caminho)
+
+# A function to allow for showing some of the inline code
+rinline <- function(code) {
+  html <- '<code  class = "r">``` `r CODE` ```</code>'
+  sub("CODE", code, html)
+
+##https://opensource.com/article/19/5/python-3-default-mac
+#Sys.setenv(RETICULATE_PYTHON = "C:/Users//AppData/Local/Microsoft/WindowsApps/python3")
+
+#install.packages("reticulate")
+#library(reticulate)
+#virtualenv_create("artigosurvival",python_version="3.7.10")
+#use_virtualenv("artigosurvival", required = TRUE)
+}   
+```
+
+```{r RETICULATE,echo = FALSE}
+#set environment first
+Sys.setenv(RETICULATE_PYTHON="C:\\Users\\sobre\\anaconda3\\envs\\survival\\python.exe")
+#call reticulate
+library(reticulate)
+#activate environment
+use_condaenv("survival", required = TRUE)
+#use_virtualenv("C:/Users/mangelo.EEG/Documents/python")
+```
+
+# Introduction
+
+Research idea:
+
+-   
+
+Context: An organization membership located in Portugal. The organization offers
+an annual membership for the members, the service subscription has several
+payment options:
+
+-   Men with a annual fee of 10€
+-   Women annual fee of 6€
+-   Correspondent fee 6€
+-   Retired fee 5€
+-   Student fee 2.5€
+-   under-14 fee 1€
+
+\clearpage
+
+\renewcommand{\baselinestretch}{0.5}\normalsize
+
+\renewcommand{\baselinestretch}{1.1}\normalsize
+
+\clearpage
+
+```{r Stats1, echo = TRUE, message = FALSE}
+library(dplyr)
+library(dlookr)
+library(ggplot2)
+
+#eda_report(nlswork,output_dir  = 
+#	"C:/Users/mangelo.EEG/Documents/GitHub/prjs/reports/",
+#	output_file = "eda_report.pdf")
+
+## The data
+
+names(airquality)
+#summary(nlswork)
+
+## Missing values
+library(visdat)
+vis_dat(airquality)
+
+library(naniar)
+vis_miss(airquality)
+
+gg_miss_upset(airquality)
+## GRAPHS
+dplyr::glimpse(cars$Ozone)
+d <- density(airquality$Temp)
+plot(d)
+
+plot(airquality$Ozone, airquality$Solar.R)
+ggplot(airquality, aes(x = Ozone, y = Solar.R)) +
+geom_miss_point()
+
+ggplot(airquality, aes(x = Wind, y = Temp)) +
+geom_miss_point() +
+facet_wrap(vars(Month))
+
+stats <- summary(airquality$Temp)
+stats
+
+describe(airquality)
+
+```
+
+# Experimental Results
+
+## Data description
+
+```{r get_data, echo = FALSE, message = FALSE, warning=FALSE}
+library(stargazer)
+library(readxl)
+library(dplyr)
+library(visdat)
+
+df_members <- read_excel("../data/membershipData.xlsx")
+
+names(df_members)
+# rename column labels
+names(df_members) <- c("num_socio", "dt_inscription", "year", "birth_date",
+                       "age", "sex", "marital_status", "category",
+                       "monthly_fee", "occupation", "zip_code",
+                       "dt_last_invoice", "dt_last_payment", "total_amount",
+                       "total_matches", "season_matches",
+                       "days_since_last_payment", "months_since_last_payment",
+                       "dropout", "years_membership", "stadium_access",
+                       "quart_stadium_entries", "inscription_month")
+
+names(df_members)
+
+# select relevant variables
+df_members <- df_members %>%
+select(year, age, sex, marital_status, monthly_fee, total_amount, total_matches,
+       season_matches, months_since_last_payment, dropout, years_membership,
+       stadium_access, quart_stadium_entries,inscription_month)
+
+str(df_members)
+vis_dat(df_members) #check
+```
+
+Table \@ref(tab:tab1cars) shows data's summary statistics.[^1] `stargazer()` is
+and excellent solution to export outputs.
+
+[^1]: You can reference the table as \@ref(tab1cars).
+
+```{r Export Stats0, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+library(stargazer)
+df_summary <- summary(df_members, object)
+stargazer(df_members,
+          title = "Summary statistics",
+          label = "tab1cars",
+          table.placement = "h",
+          header = FALSE,
+          summary = TRUE,
+          summary.stat = c("min", "p25", "median", "p75", "max", "median", "sd")
+         )
+
+```
+
+Teste \@ref(tab:summarytable)
+
+```{r summarytable, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(gtsummary)
+library(kableExtra)
+
+tbl <- df_members %>%
+    tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})",
+                                 all_categorical() ~ "{p}%")
+               )
+as_kable_extra(tbl,booktabs=T,caption="Summary statistics")
+```
+
+
+
+
+```{python Py,eval=TRUE,echo=TRUE}
+from pysurvival.utils.display import correlation_matrix
+import pandas as pd
+import numpy as np
+
+col = ['sex','marital_status','quart_stadium_entries']
+
+df_members = r.df_members #copy r dataframe to python
+
+df_members = pd.get_dummies(df_members, columns=col,drop_first=True)
+
+# Creating the time and event columns
+time_column = 'years_membership'
+event_column = 'dropout'
+
+# Extracting the features
+features = np.setdiff1d(df_members.columns, [time_column, event_column] ).tolist()
+
+
+correlation_matrix(df_members, figure_size=(10,10), text_fontsize=6)
+```
+
+The average age in our data is `r round(mean(df_members$age,na.rm = TRUE),1)`.
+
+# Tables {#sec:tables}
+
+R Markdown PDF is now able to produce good tables with our output. For
+`stargazer` the label is contained in the function, while for `kable` it's
+contained in the chunk name.
+
+## stargazer(): Summary and regression tables
+
+Table \@ref(tab2) reports regression outputs. Name the models as you can refer
+to their names in the text (M1, M2, M3).
+
+```{r Export Regressions, echo = TRUE, message = FALSE, warning = FALSE, paged.print = FALSE, results = "asis"}
+library(stargazer)
+model1 <- lm(speed ~ dist, data = cars)
+model2 <- lm(speed ~ dist, data = cars)
+model3 <- lm(dist ~ speed, data = cars)
+stargazer(model1, model2, model3,
+          title = "Regression table with stargazer",
+          label = "tab2",
+          table.placement = "h",
+          column.labels = c("M1", "M2", "M3"),
+          model.numbers = FALSE,
+          header = FALSE)
+```
+
+# Figures
+
+## Graphs with R
+
+You can insert figures like this. One would like to produce and insert them on
+the fly in the `.rmd` file. Figure \@ref(fig:fig-1) is such an example.
+
+```{r Figures 1, fig-1, fig.align = "center", fig.cap = "Scatterplot of Speed and Distance", fig.pos = "h", message = FALSE, warning = FALSE, paged.print = FALSE}
+plot(cars$speed, cars$dist)
+```
+
+However, in some cases it does not work.
+
+## Example: ggplot2 graphs
+
+See the `ggplot2` output reported in Figure \@ref(fig:fig-2).
+
+```{r Fig-2, fig.align = "center", fig.cap = "Miles per gallon according to the weight", fig.pos = "h", fig.width = 6, fig.height = 3, message = FALSE, warning = FALSE, paged.print = FALSE}
+mtcars$cyl <- as.factor(mtcars$cyl) # Convert cyl to factor
+library(ggplot2)
+ggplot(mtcars, aes(x = wt, y = mpg, shape = cyl)) + geom_point() +
+  labs(x = "Weight (lb/1000)", y = "Miles/(US) gallon",
+       shape = "Number of \n Cylinders") + theme_classic()
+```
+
+## Another example using Plotly
+
+With `Plotly` we can produce interactive graphs which play well, for example,
+once can embedded in html webpages (drop by
+[here](https://paulcbauer.shinyapps.io/visualizing-causal-scenarios/) for an
+example). One can insert this type of graphs in R Markdown PDF using `Orca` (it
+generates static images from Plotly graphs). Go
+[here](https://github.com/plotly/orca#installation) to check how to install it.
+See Figure \@ref(fig:fig-3) for an example.
+
+```{r Fig-3, message = FALSE, warning = FALSE}
+library(plotly)
+p <- plot_ly(cars, type = "scatter", mode = "markers",
+        x = ~speed,
+        y = ~dist)
+#Sys.setenv('MAPBOX_TOKEN' = '12423423') # set arbitrary token
+#orca(p, "logs/plotly-plot.pdf")
+```
+
+```{=tex}
+\begin{figure}[ht]
+\centering
+\caption{Example: export a Plotly figure using `orca`}\label{fig:fig-3}
+    \includegraphics[width = 0.9\linewidth]{../figures/teste.png}
+\begin{flushleft}
+\end{flushleft}
+\end{figure}
+\vspace{-1.2cm}
+```
+```{r exemploMedia}
+# Lets create a value for example
+
+media <- mean(cars$speed)
+
+```
+
+The criminal rate is `r media`%o.
+
+\vspace{0.3cm}
+
+# Miguel's tests
+
+## R
+
+Example of an equation
+
+$$\int_0^{2\pi} \sin x~dx$$
+
+*Example of a matrix*
+
+$$
+\mathbf{X} = \left[\begin{array}
+{rrr}
+1 & 2 & 3 \\
+4 & 5 & 6 \\
+7 & 8 & 9
+\end{array}\right]
+$$
+
+or
+
+```{=tex}
+\begin{equation}
+f\left(k\right) = \binom{n}{k}p^k\left(1-p\right)^{n-k} \label{eq:binom}
+\end{equation}
+```
+See Equation \@ref(eq:binom).
+
+```{=tex}
+\begin{align}
+y_{ijt} = \beta x_{ijt} + \eta_i + \gamma_j + \lambda_t + \varepsilon_{ijt}
+\end{align}
+```
+```{r echo = TRUE, message = FALSE, warning = FALSE, paged.print = FALSE, results = "asis"}
+library(stargazer)
+stargazer(cars,
+          title = "Summary 24",
+          label = "tab24",
+          table.placement = "ht",
+          header = FALSE)
+```
+
+# Final remarks
+
+Check the replication package for Bonhomme, Lamadon and Manresa (2019):
+<https://github.com/tlamadon/blm-replicate>
+
+\newpage
+
+# References {.unnumbered}
+
+::: {#refs}
+:::
+
+# Appendix: Chunk options {.unnumbered}
+
+## Software versioning
+
+### R
+
+```{r fig-versioning, echo = TRUE}
+cat(paste("#", capture.output(sessionInfo()), "\n", collapse  = ""))
+  # or use message() instead of cat()
+```
