@@ -73,7 +73,7 @@ pip install pysurvival
 ```
 
 Windows installation requires some changes.
-Followed this [link](https://github.com/square/pysurvival/issues/8)
+Followed this [link](https://github.com/square/pysurvival/issues/8).
 Install visual studio build tools [here](https://aka.ms/buildtools)
 
 ![img](./figures/png_2142357625300655111.png)
