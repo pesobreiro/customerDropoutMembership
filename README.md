@@ -84,6 +84,8 @@ python setup.py build_ext --inplace
 python setup.py install --user
 ```
 
+some problems with numpy: pip install numpy==1.19.3
+
 ```
 @Misc{ pysurvival_cite,
   author = {Stephane Fotso and others},

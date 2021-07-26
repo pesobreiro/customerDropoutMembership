@@ -60,25 +60,27 @@ print(caminho)
 rinline <- function(code) {
   html <- '<code  class = "r">``` `r CODE` ```</code>'
   sub("CODE", code, html)
-
-##https://opensource.com/article/19/5/python-3-default-mac
-#Sys.setenv(RETICULATE_PYTHON = "C:/Users//AppData/Local/Microsoft/WindowsApps/python3")
-
-#install.packages("reticulate")
-#library(reticulate)
-#virtualenv_create("artigosurvival",python_version="3.7.10")
-#use_virtualenv("artigosurvival", required = TRUE)
 }   
 ```
 
 ```{r RETICULATE,echo = FALSE}
+#Replace by your environment, usually which python solves the problem
+#conda env list also is a good option
 #set environment first
-Sys.setenv(RETICULATE_PYTHON="C:\\Users\\sobre\\anaconda3\\envs\\survival\\python.exe")
-#call reticulate
-library(reticulate)
-#activate environment
-use_condaenv("survival", required = TRUE)
-#use_virtualenv("C:/Users/mangelo.EEG/Documents/python")
+switch(Sys.info()[['sysname']],
+       Windows = {
+            Sys.setenv(RETICULATE_PYTHON="C:\\Users\\sobre\\anaconda3\\envs\\survival\\python.exe")
+            #call reticulate
+            library(reticulate)
+            #activate environment
+            use_condaenv("survival", required = TRUE)
+       },
+       Linux = {
+            Sys.setenv(RETICULATE_PYTHON="/home/sobreiro/miniconda3/envs/survival/bin/python")
+            library(reticulate)
+            use_condaenv("survival", required = TRUE)
+       }
+)
 ```
 
 # Introduction
@@ -207,16 +209,21 @@ Teste \@ref(tab:summarytable)
 ```{r summarytable, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(gtsummary)
 library(kableExtra)
+library(labelled)
+
+var_label(df_members$year) <- "Inscription year"
+var_label(df_members$age) <- "Age in years"
+var_label(df_members$sex) <- "Male or female"
+var_label(df_members$marital_status) = "Single, married and other."
 
 tbl <- df_members %>%
     tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})",
-                                 all_categorical() ~ "{p}%")
-               )
-as_kable_extra(tbl,booktabs=T,caption="Summary statistics")
+                                 all_categorical() ~ "{p}%"),
+                type = list(age ~ "continuous")
+               ) %>% add_stat_label()
+
+as_kable_extra(tbl,booktabs=T,caption="Summary statistics of features used")
 ```
-
-
-
 
 ```{python Py,eval=TRUE,echo=TRUE}
 from pysurvival.utils.display import correlation_matrix
@@ -238,9 +245,35 @@ features = np.setdiff1d(df_members.columns, [time_column, event_column] ).tolist
 
 
 correlation_matrix(df_members, figure_size=(10,10), text_fontsize=6)
+
+r.df_members = df_members
+
 ```
 
-The average age in our data is `r round(mean(df_members$age,na.rm = TRUE),1)`.
+The average age is `r round(mean(df_members$age,na.rm = TRUE),1)` &plusmn;
+`r round(sd(df_members$age,na.rm = TRUE),1)`.
+
+total_amount
+total_matches
+season_matches12%
+24%
+316 (494)
+27 (46)
+2.2 (4.1)
+months_since_last_payment 19 (32)
+dropout
+22%
+years_membership
+11 (11) 
+
+```{r test}
+
+str(df_members)
+
+```
+
+
+
 
 # Tables {#sec:tables}
 
