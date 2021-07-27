@@ -102,7 +102,8 @@ some problems with numpy: pip install numpy==1.19.3
 
 ```python
 conda_create(envname = "rsurvival",
-             conda="C:/Users/sobre/AppData/Local/r-miniconda/Scripts/conda.exe",forge = TRUE, 
+             conda="C:/Users/sobre/AppData/Local/r-miniconda/Scripts/conda.exe",
+             forge = TRUE, 
              channel = c("conda-forge","sebp"), 
              packages = c("pandas","seaborn","lifelines","scikit-survival"),
              python_version = "3.7.10")
