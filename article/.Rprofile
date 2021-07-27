@@ -1,1 +1,0 @@
-Sys.setenv(RETICULATE_PYTHON="C:\\Users\\sobre\\anaconda3\\envs\\survival\\python.exe")

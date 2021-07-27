@@ -95,16 +95,26 @@ some problems with numpy: pip install numpy==1.19.3
 }
 ```
 
-# Installing in reticulate
+# Installing in reticulate 
 
-virtualenv_create("artigosurvival",python_version="3.7.10")
-use_virtualenv("artigosurvival", required = TRUE)
 
-virtualenv_install("artigosurvival", "pysurvival")
+## Windows
 
-pandas requirement
-virtualenv_install("artigosurvival", "xlrd")
+```python
+conda_create(envname = "rsurvival",
+             conda="C:/Users/sobre/AppData/Local/r-miniconda/Scripts/conda.exe",forge = TRUE, 
+             channel = c("conda-forge","sebp"), 
+             packages = c("pandas","seaborn","lifelines","scikit-survival"),
+             python_version = "3.7.10")
 
+then install pysurvival using conda environment
+
+conda activate rsurvival
+
+git clone https:/github.com/bacalfa/pysurvival.git
+python setup.py build_ext --inplace
+python setup.py install --user
+```
 
 ```{python Py,eval=TRUE,echo=TRUE}
 from pysurvival.utils.display import correlation_matrix

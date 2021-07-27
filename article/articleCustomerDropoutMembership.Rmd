@@ -18,7 +18,7 @@ date: |
 linestretch: 1.2
 colorlinks: true
 abstract: \noindent\setstretch{1}Abstract of the article. Here we can place more info.\vspace{.8cm}
-bibliography: references.bib
+bibliography: refMembership.bib
 csl: american-sociological-association.csl
 output:
   bookdown::pdf_document2:
@@ -26,6 +26,7 @@ output:
     toc: no
     keep_tex: true
     latex_engine: xelatex
+    number_sections: true
 mainfont: Times New Roman
 sansfont: Times New Roman
 fontsize: 12pt
@@ -63,20 +64,27 @@ rinline <- function(code) {
 }   
 ```
 
-```{r RETICULATE,echo = FALSE}
+```{r RETICULATE, message=FALSE, warning=FALSE, include=FALSE}
+# load essential libraries
+library(dplyr)
+library(dlookr)
+library(ggplot2)
+library(reticulate)
 #Replace by your environment, usually which python solves the problem
 #conda env list also is a good option
-#set environment first
-switch(Sys.info()[['sysname']],
+#set environment first then call reticulate library
+path_python_windows <- "C:\\Users\\sobre\\AppData\\Local\\r-miniconda\\envs\\rsurvival\\python.exe"
+path_python_linux <- "/home/sobreiro/miniconda3/envs/survival/bin/python"
+switch(Sys.info()[["sysname"]],
        Windows = {
-            Sys.setenv(RETICULATE_PYTHON="C:\\Users\\sobre\\anaconda3\\envs\\survival\\python.exe")
+            Sys.setenv(RETICULATE_PYTHON = path_python_windows)
             #call reticulate
             library(reticulate)
             #activate environment
-            use_condaenv("survival", required = TRUE)
+            use_condaenv("rsurvival", required = TRUE)
        },
        Linux = {
-            Sys.setenv(RETICULATE_PYTHON="/home/sobreiro/miniconda3/envs/survival/bin/python")
+            Sys.setenv(RETICULATE_PYTHON = path_python_linux)
             library(reticulate)
             use_condaenv("survival", required = TRUE)
        }
@@ -86,8 +94,6 @@ switch(Sys.info()[['sysname']],
 # Introduction
 
 Research idea:
-
--   
 
 Context: An organization membership located in Portugal. The organization offers
 an annual membership for the members, the service subscription has several
@@ -100,61 +106,103 @@ payment options:
 -   Student fee 2.5€
 -   under-14 fee 1€
 
-\clearpage
+Churn dropout prediction is a problem being addressed supported in the idea that
+the customers database is the most valuable asset that the organizations possess
+[@Athanassopoulos_2000], which requires determining customers that will attrite
+[@alboukaey_dynamic_2020]. Dropout implies in contractual business that the
+customer needs to renew their contracts to continue its usage
+[@Ascarza_Hardie_2013].
 
-\renewcommand{\baselinestretch}{0.5}\normalsize
+However, in contractual settings the customer dropout represents an explicit
+ending of a relationship more punitive than non contractual settings
+[@risselada_staying_2010] This has implications to the profitability of the
+organizations increasing marketing costs and reducing sales
+[@amin_customer_2017].
 
-\renewcommand{\baselinestretch}{1.1}\normalsize
+The anticipation of the dropout allows the development of countermeasures to
+reduce customer churn. Several studies address the problem related to customer
+retention trying to improve the profitability [@coussement_improving_2009;
+@garcia_intelligent_2017; @devriendt_why_2019]
 
-\clearpage
-
-```{r Stats1, echo = TRUE, message = FALSE}
-library(dplyr)
-library(dlookr)
-library(ggplot2)
-
-#eda_report(nlswork,output_dir  = 
-#	"C:/Users/mangelo.EEG/Documents/GitHub/prjs/reports/",
-#	output_file = "eda_report.pdf")
-
-## The data
-
-names(airquality)
-#summary(nlswork)
-
-## Missing values
-library(visdat)
-vis_dat(airquality)
-
-library(naniar)
-vis_miss(airquality)
-
-gg_miss_upset(airquality)
-## GRAPHS
-dplyr::glimpse(cars$Ozone)
-d <- density(airquality$Temp)
-plot(d)
-
-plot(airquality$Ozone, airquality$Solar.R)
-ggplot(airquality, aes(x = Ozone, y = Solar.R)) +
-geom_miss_point()
-
-ggplot(airquality, aes(x = Wind, y = Temp)) +
-geom_miss_point() +
-facet_wrap(vars(Month))
-
-stats <- summary(airquality$Temp)
-stats
-
-describe(airquality)
-
+``` {.markdown}
+If an organization can predict a possible dropout and
+develop countermeasures to avoid desertion, they can avoid customer defections that 
+lead to a loss of money. Reichheld (1996) evidenced that reducing dropout rates by 5% 
+(e.g., from 15% to 10% per year) could represent an increase in prots up to double, as 
+acquiring new customers costs 5 to 6 times more than retaining existing ones (Bhattacharya, 
+1998). Existing organizations are addressing this problem by shifting their target from 
+capturing new customers to preserving existing ones (García et al., 2017),
+as investments in retention strategies have higher returns than acquisitions (Coussement 
+& Van den Poel, 2009). The importance of customer retention to maintain organizational protability (Devriendt
+et al., 2019) leads to the problem of how to quantify the nancial impact of customer retention actions
+under the assumption that the organization goal should be related to the increase the lifetime of the
+customer to increase their prots. The customer lifetime value (CLV) allows us to measure this, as itr
 ```
 
-# Experimental Results
+1.  Address the global problem of customer dropout
+2.  The identification of approaches to predict dropout requires more than only,
+    address the prediction accuracy such as ... place existing studies
+    addressing this...
+3.  A lot of effort has been placed testing the accuracy of existing algorithms,
+    in this study we try to fill this gap and explore also a balancing between
+    the model interpretability, accuracy, and the investment required.
+4.  Dropout prediction problem related to the timings
 
-## Data description
+The approaches normally employing use a dependent variable representing dropout
+or non-dropout, without considering a dynamic perspective that the dropout risk
+changes over time [@Alboukaey_dynamic_2020]. The survival models try to solve
+this limitation [@routh_estimating_2020] capturing a temporal dimension of the
+customer dropout [@perianez_churn_2016]. @perianez_churn_2016 used survival
+analysis to predict also when the dropout will occur.
 
-```{r get_data, echo = FALSE, message = FALSE, warning=FALSE}
+Other studies proposed also the integration of several algorithms to improve the
+performance in the prediction of the dropout such the usage of clusters
+combinated with churn prediction [@hung_applying_2006; @gok_case_2015;
+@vijaya_sivasankar_2019]. The approach relies in the assumption that combining
+the customers in different clusters allows the improvement of the prediction
+accuracy. @vijaya_sivasankar_2019 suggested the adoption hybrid models combining
+more than one classier are achieving increased performance compared to those
+using single classifiers.
+
+There are several challenges around the timing related to dropout, or
+considering the dynamic behavior of the customer in the intent to drop out
+[@alboukaey_dynamic_2020]. The importance of understanding when dropout will
+occur and the risk when discarding the temporal perspective of the problem seems
+to be an element that should be addressed. Few studies considered this
+[@perianez_churn_2016; @burez_separating_2008]. This shows an opportunity to
+address the importance of the timeframe and its influence on the efficiency of
+the model and also evalute if the combination of clusters could improve the
+performance.
+
+In this study, we adopt random survival forests which have never been used in
+understanding factors affecting membership in a sport club using existing data
+in a Sport Club. The analysis is based on the use of random survival forests in
+the presence of covariates that do not necessarily satisfy the PH assumption.
+Additionly we also propose a new approach combining clusters with survival
+analysis.
+
+??? Add interpretability layer
+
+Random Survival Forests does not make the proportional hazards assumption
+[@Ehrlinger_2016] and has the flexibility to model survivor curves that are of
+dissimilar shapes for contrasting groups of subjects. Random Survival Forest is
+an extension of Random Forest allowing efficient non-parametric analysis of time
+to event data [@Breiman_2001]. This characteristics allow us to surpass the Cox
+Regression limitation of the proportional hazard assumption, requiring to
+exclude variables which not fulfill the model assumption. It was shown by
+@Breiman_2001 that ensemble learning can be further improved by injecting
+randomization into the base learning process - a method called Random Forests.
+
+# Methodology
+
+Dropout is a binary value where one represent churn and zero not churn. The dropout
+happens when a member does not have a payment ... 
+
+## Dataset
+
+### Data description
+
+```{r get_data, echo = FALSE, message = FALSE, warning=FALSE, include = FALSE}
 library(stargazer)
 library(readxl)
 library(dplyr)
@@ -185,14 +233,10 @@ str(df_members)
 vis_dat(df_members) #check
 ```
 
-Table \@ref(tab:tab1cars) shows data's summary statistics.[^1] `stargazer()` is
-and excellent solution to export outputs.
-
-[^1]: You can reference the table as \@ref(tab1cars).
-
-```{r Export Stats0, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+Table \@ref(tab:summarytable) shows data's summary statistics. 
+```{r teste, eval=FALSE, message=FALSE, warning=FALSE, echo=FALSE, paged.print=FALSE}
 library(stargazer)
-df_summary <- summary(df_members, object)
+df_summary <- summary(df_members)
 stargazer(df_members,
           title = "Summary statistics",
           label = "tab1cars",
@@ -201,11 +245,7 @@ stargazer(df_members,
           summary = TRUE,
           summary.stat = c("min", "p25", "median", "p75", "max", "median", "sd")
          )
-
 ```
-
-Teste \@ref(tab:summarytable)
-
 ```{r summarytable, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(gtsummary)
 library(kableExtra)
@@ -224,8 +264,47 @@ tbl <- df_members %>%
 
 as_kable_extra(tbl,booktabs=T,caption="Summary statistics of features used")
 ```
+The average age is `r round(mean(df_members$age,na.rm = TRUE),1)` ±
+`r round(sd(df_members$age,na.rm = TRUE),1)`, the members have an attendance 
+`r round(mean(df_members$total_matches,na.rm = TRUE),0)` ± `r 
+round(sd(df_members$total_matches,na.rm = TRUE),1)` with a membership
+`r round(mean(df_members$years_membership,na.rm = TRUE),0)` ± `r 
+round(sd(df_members$years_membership,na.rm = TRUE),1)`.
+Figure \@ref(fig:membershipyear) shows the distribution of the dropout considering the inscription year.
 
-```{python Py,eval=TRUE,echo=TRUE}
+```{r membershipyear, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Number of members by year"}
+members_year<-df_members%>% 
+  select(year,dropout) %>%
+  group_by(year,dropout) %>%
+  summarize(count = n())  
+
+members_year$dropout = factor(members_year$dropout)  
+# scale_y_continuous(breaks=c(2,4,6,8,10))+
+g<-ggplot(data = members_year,mapping = aes(x = year,y = count,linetype = dropout)) 
+g+geom_line()+labs(x='year',y='Number of members') +
+  theme_classic()
+```
+
+## TODO 
+
+The random survival forest was developed using the package PySurvival
+[@Fotso_others_2019]. The most relevant variables predicting the dropout are
+analysed using the log-rank test. The metric variables are transformed to
+categorical using the quartiles to provide a statistical comparison of groups.
+The survival analysis was conducted using the package Lifelines
+[@Davidson-Pilon_2021].
+
+PySurvival is an open source python package for Survival Analysis modeling - the
+modeling concept used to analyze or predict when an event is likely to happen.
+It is built upon the most commonly used machine learning packages such NumPy,
+SciPy and PyTorch. PySurvival is compatible with Python 2.7-3.7
+
+## Running the model
+
+    from pysurvival.utils.display import correlation_matrix
+    correlation_matrix(df[features], figure_size=(10,10), text_fontsize=8)
+
+```{python Py,eval=TRUE, echo=FALSE}
 from pysurvival.utils.display import correlation_matrix
 import pandas as pd
 import numpy as np
@@ -250,169 +329,218 @@ r.df_members = df_members
 
 ```
 
-The average age is `r round(mean(df_members$age,na.rm = TRUE),1)` &plusmn;
-`r round(sd(df_members$age,na.rm = TRUE),1)`.
+Removed the variables with greater correlations
 
-total_amount
-total_matches
-season_matches12%
-24%
-316 (494)
-27 (46)
-2.2 (4.1)
-months_since_last_payment 19 (32)
-dropout
-22%
-years_membership
-11 (11) 
+    to_remove = ['totalJogos', 'idaEstadio']
+    features = np.setdiff1d(features, to_remove).tolist()
 
-```{r test}
+## Model building
 
-str(df_members)
+The model was built with with 60% of the data for training and 40% for testing.
+The survival model parameters where:
 
-```
+    from pysurvival.models.survival_forest import RandomSurvivalForestModel
+    csf = RandomSurvivalForestModel(num_trees=200)
+    csf.fit(X_train, T_train, E_train, max_features='sqrt', max_depth=5, min_node_size=20)
 
+The model accuracy is very high in the first years. The prediction is very
+similar to the actual value.
+
+![Prediction accuracy](../analysis/predictionAccuracy.png)
+
+All the outputs are available [here](../analysis/01.survRandomForest.pdf)
 
 
-
-# Tables {#sec:tables}
-
-R Markdown PDF is now able to produce good tables with our output. For
-`stargazer` the label is contained in the function, while for `kable` it's
-contained in the chunk name.
-
-## stargazer(): Summary and regression tables
-
-Table \@ref(tab2) reports regression outputs. Name the models as you can refer
-to their names in the text (M1, M2, M3).
-
-```{r Export Regressions, echo = TRUE, message = FALSE, warning = FALSE, paged.print = FALSE, results = "asis"}
-library(stargazer)
-model1 <- lm(speed ~ dist, data = cars)
-model2 <- lm(speed ~ dist, data = cars)
-model3 <- lm(dist ~ speed, data = cars)
-stargazer(model1, model2, model3,
-          title = "Regression table with stargazer",
-          label = "tab2",
-          table.placement = "h",
-          column.labels = c("M1", "M2", "M3"),
-          model.numbers = FALSE,
-          header = FALSE)
-```
-
-# Figures
-
-## Graphs with R
-
-You can insert figures like this. One would like to produce and insert them on
-the fly in the `.rmd` file. Figure \@ref(fig:fig-1) is such an example.
-
-```{r Figures 1, fig-1, fig.align = "center", fig.cap = "Scatterplot of Speed and Distance", fig.pos = "h", message = FALSE, warning = FALSE, paged.print = FALSE}
-plot(cars$speed, cars$dist)
-```
-
-However, in some cases it does not work.
-
-## Example: ggplot2 graphs
-
-See the `ggplot2` output reported in Figure \@ref(fig:fig-2).
-
-```{r Fig-2, fig.align = "center", fig.cap = "Miles per gallon according to the weight", fig.pos = "h", fig.width = 6, fig.height = 3, message = FALSE, warning = FALSE, paged.print = FALSE}
-mtcars$cyl <- as.factor(mtcars$cyl) # Convert cyl to factor
-library(ggplot2)
-ggplot(mtcars, aes(x = wt, y = mpg, shape = cyl)) + geom_point() +
-  labs(x = "Weight (lb/1000)", y = "Miles/(US) gallon",
-       shape = "Number of \n Cylinders") + theme_classic()
-```
-
-## Another example using Plotly
-
-With `Plotly` we can produce interactive graphs which play well, for example,
-once can embedded in html webpages (drop by
-[here](https://paulcbauer.shinyapps.io/visualizing-causal-scenarios/) for an
-example). One can insert this type of graphs in R Markdown PDF using `Orca` (it
-generates static images from Plotly graphs). Go
-[here](https://github.com/plotly/orca#installation) to check how to install it.
-See Figure \@ref(fig:fig-3) for an example.
-
-```{r Fig-3, message = FALSE, warning = FALSE}
-library(plotly)
-p <- plot_ly(cars, type = "scatter", mode = "markers",
-        x = ~speed,
-        y = ~dist)
-#Sys.setenv('MAPBOX_TOKEN' = '12423423') # set arbitrary token
-#orca(p, "logs/plotly-plot.pdf")
-```
+# Open questions - to remove
 
 ```{=tex}
-\begin{figure}[ht]
-\centering
-\caption{Example: export a Plotly figure using `orca`}\label{fig:fig-3}
-    \includegraphics[width = 0.9\linewidth]{../figures/teste.png}
-\begin{flushleft}
-\end{flushleft}
-\end{figure}
-\vspace{-1.2cm}
+\begin{itemize}
+    \item RQ1: What is the current state of the research being developed?
+    \item RQ2: What algorithms have been used to predict dropout?
+    \item RQ3: What are the features used to predict dropout?
+    \item RQ4: When does dropout occur?
+    \item RQ5: How is the accuracy of the machine learning algorithms in predicting dropout measured?
+\end{itemize}
 ```
-```{r exemploMedia}
-# Lets create a value for example
+From RQ1, it was possible to identify some business areas that are
+under-researched, such as the energy sector, education, logistics and
+hospitality. Compared to other business areas such telecom or the financial
+sector, research on the energy sector or water supply is lacking, considering
+the contractual settings that are assumed to provide such types of services.
+Considering the business model of many software companies as software as a
+services (SaS), the number of research works is also surprisingly low.
 
-media <- mean(cars$speed)
+RQ2 also provided an overall perspective related to the algorithms being used to
+predict customer dropout. The first could be the importance and wider adoption
+of decision trees and random forests [@antipov_applying_2010;
+@benoit_improving_2012; @burez_crm_2007], and logistic regression
+[@coussement_improved_2010], which could be due to its higher interpretability
+and flexibility [@keramati_improved_2014]. Interpretability is an important
+aspect for the marketing department in the extraction of valuable information
+from the model to develop effective retention strategies [@verbeke_new_2012].
+The problem arises in the balancing between interpretability and the higher
+performance of the algorithms inspired by nature (such as neural networks). From
+a business perspective, dropout prediction should also be considered as a
+business objective, which requires more than predicting if the customer will
+churn or not [@devriendt_why_2019], where higher interpretability provides
+better support in the development of retention strategies. The developed SLR
+also raises the possibility of integrating different algorithms using ensemble
+methods or integrating several models using a hybrid approach. None of the
+studies integrated the survival approach to predict customer dropout, for
+example, using a hybrid approach.
 
+It is considered positive if actions are developed to retain customers, but the
+problems should also be considered, such as the following: (1) customers who
+have greater risk of dropout should be targeted to provide a base for a better
+ROI in the retention strategies [@xie_customer_2009; @coussement_churn_2008] and
+(2) the retention strategies should be developed focused on customers with
+higher satisfaction, or its inclusion could be a reminder of the contractual
+agreement nearing an end and could lead to churn [@devriendt_why_2019].
+
+From RQ3, several types of features being used were able to be identified, such
+as demographic, behavioral, and economic indicators, pictorial data, network
+relationships or high cardinality features. The problem that arises is that some
+studies used data and features that were not described, and this creates a major
+issue, How can reproducibility be developed in a study without the availability
+of the data or the identification of the features used? Considering that science
+is driven by data, with the development of new technologies, the increasing
+complexity of research and the amount of data collected, the challenge is to
+ensure that research is available to all [@Hanson_Sugden_Alberts_2011]; this
+requires both availability of the data and the algorithms so that they can be
+explored by other researchers. The features are selected mainly to verify the
+performance of the models, and are essential to performance prediction,
+accuracy, and the steps for processing the data, which are fundamental to
+improve the model accuracy [@azeem_churn_2017].
+
+There are several challenges around the timing related to dropout, or
+considering the dynamic behavior of the customer in the intent to drop out
+[@alboukaey_dynamic_2020]. The importance of understanding when dropout will
+occur and the risk when discarding the temporal perspective of the problem seems
+to be an element that should be addressed. Few studies considered this
+[@perianez_churn_2016; @burez_separating_2008]. This shows an opportunity to
+address the importance of the timeframe and its influence on the efficiency of
+the model.
+
+According to each business model, the timeframe could be addressed considering
+the survival probability according to the customer relationship age, and dropout
+predictions could be developed according to these survival probabilities, as
+suggested by @esteves_churn_2016, to investigate which data timeframe produces
+the best result and how the efficiency of the models is influenced by this
+timeframe. Exploring the duration of the relation and the understanding of the
+features that increase or decrease that duration seems to be an important
+approach that could complement the existing approaches to predicting dropout.
+
+From RQ5, the literature analysis showed that different types of questions
+arise. Which are the best approaches to develop the analysis of the performance
+in predicting dropout? Several metrics are customer dropout is to improve the
+performance of organizations in retaining customers, which is a management
+problem in which data mining is adopted [@verbeke_new_2012]. The goals of the
+model should be formulated considering the context of the problem that is being
+addressed; in marketing retention strategies, the up-lift supports the
+development of proactive actions to minimize the investment in retention
+strategies [@coussement_churn_2008]. Some assumptions that underlie the adoption
+of uplift metrics consider that customers with a higher risk of churning could
+not be the best targets, as suggested by @ascarza_retention_2018. Other
+researchers addressed the problem using the top-decile lift to develop more
+proactive actions to retain the customers at risk of churning
+[@coussement_churn_2008;xie_customer_2009]. This approach considers the 10% of
+customers with more risk, and investments in retention strategies should be
+developed that distinguish the churners susceptible to marketing actions from
+those who will leave anyway [@coussement_comparative_2017]. Although uplift
+models seem to be good strategies, they should also used, such as AUC,
+sensitivity, specificity, recall, precision, and F-score. However, the goal
+ofconsider factors other than risk and customer satisfaction, as not taking this
+into consideration could be counterproductive and the model should be removed
+from the retention strategy.
+
+The true business objective is to reduce customer churn. Customers who are about
+to churn but cannot be retained should be excluded from the campaign, as
+targeting them will be a waste of scarce resources [@devriendt_why_2019]. Using
+these models seem to be a good strategy, as they can outperform predictive
+models that consider only accuracy from a profitability busshould be considered
+that customers with a higher risk of churning may not be the best targets to
+develop retention strategies. Those perspectives entail the dropout.
+
+that a business context, or the clarification of a business objective underlying
+the prediction of customer dropout, should be developed, to clarify which
+objectives should be achieved before employing the profitability of reducing g
+machine learning algorithms. Surprisingly, the analyzed studies did not address
+the customer lifetime value as an objective to optimize considerininess
+perspective.
+
+# Aspects to consider
+
+-   Interpretability from RQ2
+-   The business objective is to increase the number of members and organization
+    profits
+-   piping several algorithms to improve accuracy. Aka hybrid approach
+-   @Alboukaey_dynamic_2020 proposes ...
+-   grep the articles addressing hybrid: pdfgrep -ri "hybrid.{1,10} approach"
+
+# Results
+
+In this section, we present our experiments to validate the proposed models,
+comparing against other approaches. The models where optimized using the
+hyper-parameters Grid Search technique. The explored hyper-parameters and the
+best values of these parameters for every model are listed in (ref:table1).
+
+(ref:table1) Table 2
+
+```{=latex}
+\begin{table}[ht]
+    \footnotesize
+    \centering
+    \begin{tabular}{p{0.15\textwidth}p{0.55\textwidth}p{0.25\textwidth}}
+    \hline
+    \textbf{Model name} & \textbf{Explored parameters values} & \textbf{Best parameters} \\
+    \hline
+    Survival trees  & pysurvival random forest                  & a \\
+    Survival trees
+    with clusters   & pysurvival random forest with clusters    & a \\
+    Scikit survival 
+    trees           & scikit survival                           & a \\
+    Scikit survival 
+    with clusters   & scikit with clusters                      & a \\
+    Scikit survival 
+    gradient boost  & scikit survival gradient boost            & a \\
+    Scikit survival 
+    gradient boost 
+    with clusters   & scikit with clusters                      & a \\
+    \hline
+    \end{tabular}
+    \caption{Hyper-parameters best values}
+    \label{hyperparametersbestvalues}
+\end{table}
+```
+```{=html}
+<!--
+|        Model name        | Explored hyper-parameters' values                    | Best parameters |
+| ------------------------ | ---------------------------------------------------- | --------------- |
+| Survival trees           |                                                      |                 |   
+| without cluster          |                                                      |                 |  
+-->
 ```
 
-The criminal rate is `r media`%o.
 
-\vspace{0.3cm}
+# Conclusion
 
-# Miguel's tests
+Article Ascarza
 
-## R
+-   Retention Futility: Targeting High-Risk Customers Might be Ineffective
+    [@ascarza_retention_2018]
 
-Example of an equation
+Ascarza, E. (2018). Retention Futility: Targeting High-Risk Customers Might be
+Ineffective. Journal of Marketing Research, 55(1), 80-98. sim.
+<https://doi.org/10.1509/jmr.16.0163>
 
-$$\int_0^{2\pi} \sin x~dx$$
+Example of Developed actions:
 
-*Example of a matrix*
-
-$$
-\mathbf{X} = \left[\begin{array}
-{rrr}
-1 & 2 & 3 \\
-4 & 5 & 6 \\
-7 & 8 & 9
-\end{array}\right]
-$$
-
-or
-
-```{=tex}
-\begin{equation}
-f\left(k\right) = \binom{n}{k}p^k\left(1-p\right)^{n-k} \label{eq:binom}
-\end{equation}
+``` {.markdown}
+Each month, the company identified the customers who were up for renewal and
+split them (randomly and evenly) between a treatment group that received a 
+"thank you" gift with the letter and a control group that received only the 
+renewal latter.
 ```
-See Equation \@ref(eq:binom).
-
-```{=tex}
-\begin{align}
-y_{ijt} = \beta x_{ijt} + \eta_i + \gamma_j + \lambda_t + \varepsilon_{ijt}
-\end{align}
-```
-```{r echo = TRUE, message = FALSE, warning = FALSE, paged.print = FALSE, results = "asis"}
-library(stargazer)
-stargazer(cars,
-          title = "Summary 24",
-          label = "tab24",
-          table.placement = "ht",
-          header = FALSE)
-```
-
-# Final remarks
-
-Check the replication package for Bonhomme, Lamadon and Manresa (2019):
-<https://github.com/tlamadon/blm-replicate>
-
-\newpage
 
 # References {.unnumbered}
 
@@ -429,3 +557,9 @@ Check the replication package for Bonhomme, Lamadon and Manresa (2019):
 cat(paste("#", capture.output(sessionInfo()), "\n", collapse  = ""))
   # or use message() instead of cat()
 ```
+
+### Other used tools
+
+-   [Visidata](https://www.visidata.org/) for quick exploratory. VisiData is a
+    free, open-source tool that lets you quickly open, explore, summarize, and
+    analyze datasets in your computer's terminal.
