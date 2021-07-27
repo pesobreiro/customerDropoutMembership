@@ -1,0 +1,14 @@
+base
+nvimcom
+rmarkdown
+dplyr
+dlookr
+ggplot2
+reticulate
+stargazer
+readxl
+visdat
+gtsummary
+kableExtra
+labelled
+mclust

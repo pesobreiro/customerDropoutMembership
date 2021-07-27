@@ -3,7 +3,7 @@ title: |
   |
   |
   |
-  | \vspace{1cm}Customer dropout membership^[Corresponding address: sobreiro@esdrm.ipsantarem.pt. The current template adapts part of the Rmd code by [Paul C. Bauer](https://github.com/paulcbauer/Writing_a_reproducable_paper_in_rmarkdown), Mannheim Centre for European Social Research.]\vspace{0.5cm}
+  | \vspace{1cm}Customer dropout membership^[Corresponding address: sobreiro@esdrm.ipsantarem.pt. Quality of Life Research Centre, Polytechnic Institute of Santarém, Portugal]\vspace{0.5cm}
 author: |
   | Pedro Sobreiro, Javier Berrocal, Domingos Martinho, José Garcia Alonso
   |
@@ -195,12 +195,15 @@ randomization into the base learning process - a method called Random Forests.
 
 # Methodology
 
-Dropout is a binary value where one represent churn and zero not churn. The dropout
-happens when a member does not have a payment ... 
+Dropout is a binary value where one represent churn and zero not churn. The
+dropout happens when a member does not have a payment ...
+
+The model performance was determined with the concordance probability (C-index),
+Brier Score (BS) and Mean Absolute Error (MAE) [@wangmachine2017]. The feature
+importance was determined calculating the difference between the true class
+label and noised data [@Breiman_2001].
 
 ## Dataset
-
-### Data description
 
 ```{r get_data, echo = FALSE, message = FALSE, warning=FALSE, include = FALSE}
 library(stargazer)
@@ -212,7 +215,7 @@ df_members <- read_excel("../data/membershipData.xlsx")
 
 names(df_members)
 # rename column labels
-names(df_members) <- c("num_socio", "dt_inscription", "year", "birth_date",
+names(df_members) <- c("num_socio", "dt_inscription", "year_inscription", "birth_date",
                        "age", "sex", "marital_status", "category",
                        "monthly_fee", "occupation", "zip_code",
                        "dt_last_invoice", "dt_last_payment", "total_amount",
@@ -225,7 +228,7 @@ names(df_members)
 
 # select relevant variables
 df_members <- df_members %>%
-select(year, age, sex, marital_status, monthly_fee, total_amount, total_matches,
+select(age, sex, marital_status, monthly_fee, total_amount, total_matches,
        season_matches, months_since_last_payment, dropout, years_membership,
        stadium_access, quart_stadium_entries,inscription_month)
 
@@ -233,13 +236,13 @@ str(df_members)
 vis_dat(df_members) #check
 ```
 
-Table \@ref(tab:summarytable) shows data's summary statistics. 
-The average age is `r round(mean(df_members$age,na.rm = TRUE),1)` ±
-`r round(sd(df_members$age,na.rm = TRUE),1)`, the members have an attendance 
-`r round(mean(df_members$total_matches,na.rm = TRUE),0)` ± `r 
-round(sd(df_members$total_matches,na.rm = TRUE),1)` with a membership
-`r round(mean(df_members$years_membership,na.rm = TRUE),0)` ± `r 
-round(sd(df_members$years_membership,na.rm = TRUE),1)`.
+Table \@ref(tab:summarytable) shows data's summary statistics. The average age
+is `r round(mean(df_members$age,na.rm = TRUE),1)` ±
+`r round(sd(df_members$age,na.rm = TRUE),1)`, the members have an attendance of
+`r round(mean(df_members$total_matches,na.rm = TRUE),0)` ±
+`r  round(sd(df_members$total_matches,na.rm = TRUE),1)` with a membership of
+`r round(mean(df_members$years_membership,na.rm = TRUE),0)` ±
+`r  round(sd(df_members$years_membership,na.rm = TRUE),1)` years.
 
 ```{r teste, eval=FALSE, message=FALSE, warning=FALSE, echo=FALSE, paged.print=FALSE}
 library(stargazer)
@@ -253,12 +256,12 @@ stargazer(df_members,
           summary.stat = c("min", "p25", "median", "p75", "max", "median", "sd")
          )
 ```
+
 ```{r summarytable, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
 library(gtsummary)
 library(kableExtra)
 library(labelled)
 
-var_label(df_members$year) <- "Inscription year"
 var_label(df_members$age) <- "Age in years"
 var_label(df_members$sex) <- "Male or female"
 var_label(df_members$marital_status) = "Single, married and other."
@@ -266,27 +269,34 @@ var_label(df_members$marital_status) = "Single, married and other."
 tbl <- df_members %>%
     tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})",
                                  all_categorical() ~ "{p}%"),
-                type = list(age ~ "continuous")
-               ) %>% add_stat_label()
+                type = list(age ~ "continuous")) %>%
+    add_stat_label()
 
-as_kable_extra(tbl,booktabs=T,caption="Summary statistics of features used")
+as_kable_extra(tbl, booktabs = T,
+               caption = "Summary statistics of features used")
 ```
-Figure \@ref(fig:membershipyear) shows the distribution of the dropout considering the inscription year.
+
+Figure \@ref(fig:membershipyear) shows the distribution of the dropout
+considering the number of years of membership.
 
 ```{r membershipyear, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Number of members by year"}
-members_year<-df_members%>% 
-  select(year,dropout) %>%
-  group_by(year,dropout) %>%
-  summarize(count = n())  
+members_year <- df_members %>%
+  select(years_membership, dropout) %>%
+  group_by(years_membership, dropout) %>%
+  summarize(count = n())
 
-members_year$dropout = factor(members_year$dropout)  
-# scale_y_continuous(breaks=c(2,4,6,8,10))+
-g<-ggplot(data = members_year,mapping = aes(x = year,y = count,linetype = dropout)) 
-g+geom_line()+labs(x='year',y='Number of members') +
-  theme_classic()
+members_year$dropout <- factor(members_year$dropout)
+g <- ggplot(data = members_year,
+            mapping = aes(x = years_membership, y = count,linetype = dropout))
+g + geom_line() + labs(x = "year", y = "Number of members") +
+    theme_classic()
 ```
 
-## TODO 
+## Model construction
+
+Address the model construction... the categorical variables $sex$,
+$marital\_status$ and $quart\_stadium\_entries$ where converted to dummy
+variables.
 
 The random survival forest was developed using the package PySurvival
 [@Fotso_others_2019]. The most relevant variables predicting the dropout are
@@ -300,10 +310,9 @@ modeling concept used to analyze or predict when an event is likely to happen.
 It is built upon the most commonly used machine learning packages such NumPy,
 SciPy and PyTorch. PySurvival is compatible with Python 2.7-3.7
 
-## Running the model
+### Survival trees based model
 
-    from pysurvival.utils.display import correlation_matrix
-    correlation_matrix(df[features], figure_size=(10,10), text_fontsize=8)
+In this model... The survival trees based model uses pysurvival random forest
 
 ```{python Py,eval=TRUE, echo=FALSE}
 from pysurvival.utils.display import correlation_matrix
@@ -324,33 +333,122 @@ event_column = 'dropout'
 features = np.setdiff1d(df_members.columns, [time_column, event_column] ).tolist()
 
 
-correlation_matrix(df_members, figure_size=(10,10), text_fontsize=6)
+correlation_matrix(df_members[features], figure_size=(10,10), text_fontsize=6)
 
 r.df_members = df_members
-
 ```
 
-Removed the variables with greater correlations
+Removed the variables with greater correlations $total\_matches$ and
+$quart\_stadium\_entries$
 
-    to_remove = ['totalJogos', 'idaEstadio']
-    features = np.setdiff1d(features, to_remove).tolist()
+```{python removeVar, eval=TRUE, echo=FALSE, warning=FALSE}
+to_remove = ['total_matches', 'quart_stadium_entries_ate 1']
 
-## Model building
+#consider also the features previously removed
+features = np.setdiff1d(df_members[features].columns, to_remove).tolist()
+
+df_members.drop(columns = to_remove, inplace=True)
+
+correlation_matrix(df_members[features], figure_size=(10,10), text_fontsize=6)
+```
+
+```{python createModel, eval=TRUE, echo=FALSE, cache = TRUE, warning = FALSE}
+from pysurvival.models.survival_forest import RandomSurvivalForestModel
+
+# Number of samples in the dataset
+N = df_members.shape[0]
+
+# Building training and testing sets
+from sklearn.model_selection import train_test_split
+index_train, index_test = train_test_split( range(N), test_size = 0.4)
+data_train = df_members.loc[index_train].reset_index( drop = True )
+data_test  = df_members.loc[index_test].reset_index( drop = True )
+
+# Creating the X, T and E inputs
+X_train, X_test = df_members[features], data_test[features]
+T_train, T_test = df_members[time_column], data_test[time_column]
+E_train, E_test = df_members[event_column], data_test[event_column]
+
+# Fitting the model
+csf = RandomSurvivalForestModel(num_trees=200)
+csf.fit(X_train, T_train, E_train, max_features='sqrt',
+        max_depth=5, min_node_size=20)
+```
+
+Table \@ref(tab:summarytable2) shows variables importance.
+
+```{r summarytable2, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+tbl <- py$csf$variable_importance_table
+kbl(tbl, booktabs = T, caption = "Summary statistics of features used")
+```
+
+#### Model building
 
 The model was built with with 60% of the data for training and 40% for testing.
 The survival model parameters where:
 
-    from pysurvival.models.survival_forest import RandomSurvivalForestModel
-    csf = RandomSurvivalForestModel(num_trees=200)
-    csf.fit(X_train, T_train, E_train, max_features='sqrt', max_depth=5, min_node_size=20)
+```{python pysurvivalperformance, eval=TRUE, echo=FALSE, cache=TRUE, warning = FALSE}
+from pysurvival.utils.metrics import concordance_index
+from pysurvival.utils.display import integrated_brier_score
+from pysurvival.utils.display import compare_to_actual
+
+c_index = concordance_index(csf, X_test, T_test, E_test)
+
+ibs = integrated_brier_score(csf, X_test, T_test, E_test, t_max=12,
+    figure_size=(12,5))
+
+results = compare_to_actual(csf, X_test, T_test, E_test, is_at_risk = False,  
+figure_size=(12, 6), metrics = ['rmse', 'mean', 'median'])
+```
 
 The model accuracy is very high in the first years. The prediction is very
-similar to the actual value.
+similar to the actual value. The absolute error mean of \~37 customers.
 
-![Prediction accuracy](../analysis/predictionAccuracy.png)
+### Survival trees based model with clusters
 
-All the outputs are available [here](../analysis/01.survRandomForest.pdf)
+Here we are will create clusters and developed the optimization within each
+cluster... 
 
+The calculation of he number of clusters used the package mclust
+[@scrucca2016] using the Bayesian Information Criterion (BIC). The model that
+gives the minimum BIC score can be selected as the best model [@schwarz1978]
+simplifying the problem related to choosing the number of components and
+identifying the structure of the covariance matrix, based on modelling with
+multivariate normal distributions for each component that forms the data set
+[@akogul2016].
+
+In multivariate models are available the following approaches:
+
+-   "EII"spherical, equal volume
+-   "EEE"ellipsoidal, equal volume, shape, and orientation
+-   "VII"spherical, unequal volume
+-   "VVV"ellipsoidal, varying volume, shape, and orientation, which is used as
+    default for initialization of EM algorithm
+-   VVI": diagonal, varying volume and shape t
+
+
+estava a aqui a confirmar os clusters, talvez seja melhor reduzir as variáveis...
+
+```{r clusters, echo=FALSE, message=FALSE, warning=FALSE}
+library(mclust)
+y <- scale(py$df_members)
+bic <- mclustBIC(y,modelNames = c("VEI"))
+plot(bic)
+
+temp = data.frame(bic[,'VEI'])
+temp$cluster = row.names(temp)
+
+names(temp) = c("val","cluster")
+
+kbl(temp, booktabs = T, caption = "Summary statistics of features used")
+
+mod1 <- Mclust(py$df_members,x=BIC)
+summary(mod1)
+
+#plot(mod1, what="uncertainty")
+```
+
+TODO:
 
 # Open questions - to remove
 
@@ -521,8 +619,6 @@ best values of these parameters for every model are listed in (ref:table1).
 | without cluster          |                                                      |                 |  
 -->
 ```
-
-
 # Conclusion
 
 Article Ascarza
