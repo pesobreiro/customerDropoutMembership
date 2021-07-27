@@ -100,6 +100,9 @@ some problems with numpy: pip install numpy==1.19.3
 
 ## Windows
 
+There are some issues related to windows installation this tries to 
+address that:
+
 ```python
 conda_create(envname = "rsurvival",
              conda="C:/Users/sobre/AppData/Local/r-miniconda/Scripts/conda.exe",
