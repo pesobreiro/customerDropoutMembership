@@ -234,6 +234,13 @@ vis_dat(df_members) #check
 ```
 
 Table \@ref(tab:summarytable) shows data's summary statistics. 
+The average age is `r round(mean(df_members$age,na.rm = TRUE),1)` ±
+`r round(sd(df_members$age,na.rm = TRUE),1)`, the members have an attendance 
+`r round(mean(df_members$total_matches,na.rm = TRUE),0)` ± `r 
+round(sd(df_members$total_matches,na.rm = TRUE),1)` with a membership
+`r round(mean(df_members$years_membership,na.rm = TRUE),0)` ± `r 
+round(sd(df_members$years_membership,na.rm = TRUE),1)`.
+
 ```{r teste, eval=FALSE, message=FALSE, warning=FALSE, echo=FALSE, paged.print=FALSE}
 library(stargazer)
 df_summary <- summary(df_members)
@@ -264,12 +271,6 @@ tbl <- df_members %>%
 
 as_kable_extra(tbl,booktabs=T,caption="Summary statistics of features used")
 ```
-The average age is `r round(mean(df_members$age,na.rm = TRUE),1)` ±
-`r round(sd(df_members$age,na.rm = TRUE),1)`, the members have an attendance 
-`r round(mean(df_members$total_matches,na.rm = TRUE),0)` ± `r 
-round(sd(df_members$total_matches,na.rm = TRUE),1)` with a membership
-`r round(mean(df_members$years_membership,na.rm = TRUE),0)` ± `r 
-round(sd(df_members$years_membership,na.rm = TRUE),1)`.
 Figure \@ref(fig:membershipyear) shows the distribution of the dropout considering the inscription year.
 
 ```{r membershipyear, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Number of members by year"}
