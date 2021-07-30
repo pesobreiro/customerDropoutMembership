@@ -157,7 +157,7 @@ analysis to predict also when the dropout will occur.
 
 Other studies proposed also the integration of several algorithms to improve the
 performance in the prediction of the dropout such the usage of clusters
-combinated with churn prediction [@hung_applying_2006; @gok_case_2015;
+combined with churn prediction [@hung_applying_2006; @gok_case_2015;
 @vijaya_sivasankar_2019]. The approach relies in the assumption that combining
 the customers in different clusters allows the improvement of the prediction
 accuracy. @vijaya_sivasankar_2019 suggested the adoption hybrid models combining
@@ -387,7 +387,7 @@ kbl(tbl, booktabs = T, caption = "Summary statistics of features used")
 The model was built with with 60% of the data for training and 40% for testing.
 The survival model parameters where:
 
-```{python pysurvivalperformance, eval=TRUE, echo=FALSE, cache=TRUE, warning = FALSE}
+```{python pysurvivalperformance, eval=TRUE, echo=FALSE, cache=FALSE, warning = FALSE}
 from pysurvival.utils.metrics import concordance_index
 from pysurvival.utils.display import integrated_brier_score
 from pysurvival.utils.display import compare_to_actual
@@ -402,7 +402,11 @@ figure_size=(12, 6), metrics = ['rmse', 'mean', 'median'])
 ```
 
 The model accuracy is very high in the first years. The prediction is very
-similar to the actual value. The absolute error mean of \~37 customers.
+similar to the actual value. The absolute error mean of 
+`r round(py$results$mean_absolute_error,0)` customers.
+
+
+
 
 ### Survival trees based model with clusters
 
@@ -427,9 +431,11 @@ In multivariate models are available the following approaches:
 -   VVI": diagonal, varying volume and shape t
 
 
+Estou a ter problemas com o cálculo dos clusters com o BIC... 
 estava a aqui a confirmar os clusters, talvez seja melhor reduzir as variáveis...
+testar a abordagem aos clusters no artigo dos vinhos...
 
-```{r clusters, echo=FALSE, message=FALSE, warning=FALSE}
+```{r clusters, eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 library(mclust)
 y <- scale(py$df_members)
 bic <- mclustBIC(y,modelNames = c("VEI"))
@@ -448,7 +454,93 @@ summary(mod1)
 #plot(mod1, what="uncertainty")
 ```
 
-TODO:
+```{r NbClust, eval=FALSE}
+library(NbClust)
+nb <- NbClust(y, diss=NULL, distance = "euclidean", 
+              min.nc=2, max.nc=5, method = "kmeans", 
+              index = "all", alphaBeale = 0.1)
+hist(nb$Best.nc[1,], breaks = max(na.omit(nb$Best.nc[1,])))
+
+```
+
+```{python elbowCalculation, eval=TRUE, echo=FALSE, cache=TRUE, warning = FALSE}
+from sklearn.cluster import KMeans
+from sklearn import preprocessing
+from scipy.spatial.distance import cdist
+import matplotlib.pyplot as plt
+
+import numpy as np
+#Finding optimal no. of clusters
+clusters=range(1,20)
+meanDistortions=[]
+ 
+for k in clusters:
+    model=KMeans(n_clusters=k)
+    model.fit(df_members)
+    prediction=model.predict(df_members)
+    meanDistortions.append(sum(np.min(cdist(df_members, model.cluster_centers_, 'euclidean'), axis=1)) / df_members.shape[0])
+ 
+plt.plot(clusters, meanDistortions, 'bx-')
+plt.xlabel('k')
+plt.ylabel('Average distortion')
+plt.show()
+
+```
+
+We are going to consider five clusters
+
+```{python kmeans calculation, eval=TRUE, echo=FALSE, cache=FALSE, warning = FALSE}
+cluster = KMeans(n_clusters=5)
+
+cluster.fit(df_members)
+df_members['cluster']=cluster.predict(df_members)
+print(df_members.cluster.value_counts())
+```
+
+
+```{python kmeans PCA, eval=TRUE, echo=FALSE, cache=FALSE, warning = FALSE}
+from sklearn.decomposition import PCA
+
+plt.rcParams['figure.figsize'] = [13, 4]
+
+pca=PCA(n_components=2)
+df_members['X_pca']=pca.fit_transform(df_members)[:,0] #todas as linhas da primeira coluna com redução
+df_members['Y_pca']=pca.fit_transform(df_members)[:,1] #todas as linhas da segunda coluna com redução
+
+fig, ax = plt.subplots()
+for cluster in df_members.cluster.unique():
+    x = df_members['X_pca'].loc[df_members.cluster == cluster]
+    y = df_members['Y_pca'].loc[df_members.cluster == cluster]
+    ax.scatter(x, y, label=cluster, alpha=1, edgecolors='none')
+
+ax.legend()
+ax.grid(True)
+ax.set_title('Clusters clientes')
+```
+
+TODO: fit the model for the five clusters... compare the performance with the model without
+clusters... corrigir acima para selecionar só as features
+
+```{python createModelClusters, eval=FALSE, echo=FALSE, cache = TRUE, warning = FALSE}
+# Building training and testing sets for the clusters
+for cluster in df_members.cluster.unique():
+    # Number of samples in the dataset
+    df_members_cluster = df_members[df_members.cluster == cluster]
+    N = df_members_cluster.shape[0]
+    index_train, index_test = train_test_split(range(N), test_size = 0.4)
+    data_train = df_members_cluster[features].loc[index_train].reset_index( drop = True )
+    data_test  = df_members_cluster[features].loc[index_test].reset_index( drop = True )
+
+    # Creating the X, T and E inputs
+    X_train, X_test = df_members_cluster[features], data_test[features]
+    T_train, T_test = df_members_cluster[time_column], data_test[time_column]
+    E_train, E_test = df_members_cluster[event_column], data_test[event_column]
+
+    # Fitting the model
+    csf = RandomSurvivalForestModel(num_trees=200)
+    csf.fit(X_train, T_train, E_train, max_features='sqrt',
+        max_depth=5, min_node_size=20)
+```
 
 # Open questions - to remove
 
