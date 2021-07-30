@@ -518,7 +518,7 @@ ax.grid(True)
 ax.set_title('Clusters clientes')
 ```
 
-TODO: fit the model for the five clusters... compare the performance with the model without
+TODO: Estava aqui... fit the model for the five clusters... compare the performance with the model without
 clusters... corrigir acima para selecionar só as features
 
 ```{python createModelClusters, eval=FALSE, echo=FALSE, cache = TRUE, warning = FALSE}
