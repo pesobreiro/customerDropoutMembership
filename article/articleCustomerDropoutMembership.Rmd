@@ -21,6 +21,9 @@ abstract: \noindent\setstretch{1}Abstract of the article. Here we can place more
 bibliography: refMembership.bib
 csl: american-sociological-association.csl
 output:
+  bookdown::word_document2:
+    latex_engine: xelatex
+    number_sections: true
   bookdown::pdf_document2:
     includes:
     toc: no
@@ -352,27 +355,27 @@ df_members.drop(columns = to_remove, inplace=True)
 correlation_matrix(df_members[features], figure_size=(10,10), text_fontsize=6)
 ```
 
-```{python createModel, eval=TRUE, echo=FALSE, cache = TRUE, warning = FALSE}
+```{python createModel, eval=TRUE, echo=FALSE, cache = FALSE, warning = FALSE}
 from pysurvival.models.survival_forest import RandomSurvivalForestModel
-
-# Number of samples in the dataset
-N = df_members.shape[0]
-
-# Building training and testing sets
 from sklearn.model_selection import train_test_split
-index_train, index_test = train_test_split( range(N), test_size = 0.4)
-data_train = df_members.loc[index_train].reset_index( drop = True )
-data_test  = df_members.loc[index_test].reset_index( drop = True )
+from pysurvival.utils.metrics import concordance_index
+from pysurvival.utils.display import integrated_brier_score
+from pysurvival.utils.display import compare_to_actual
 
-# Creating the X, T and E inputs
-X_train, X_test = df_members[features], data_test[features]
-T_train, T_test = df_members[time_column], data_test[time_column]
-E_train, E_test = df_members[event_column], data_test[event_column]
+X = df_members.copy()
+t = df_members['years_membership']
+e = df_members['dropout']
+X.drop(axis=1, columns=['years_membership','dropout'])
+
+X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, e, test_size=0.3, random_state=0)
 
 # Fitting the model
 csf = RandomSurvivalForestModel(num_trees=200)
-csf.fit(X_train, T_train, E_train, max_features='sqrt',
-        max_depth=5, min_node_size=20)
+csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, min_node_size=20)
+
+c_index = concordance_index(csf, X_test, t_test, e_test)
+ibs = integrated_brier_score(csf, X_test, t_test, e_test, t_max=12, figure_size=(12,5))
+results = compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False,  figure_size=(12, 6), metrics = ['rmse', 'mean', 'median'])
 ```
 
 Table \@ref(tab:summarytable2) shows variables importance.
@@ -384,22 +387,8 @@ kbl(tbl, booktabs = T, caption = "Summary statistics of features used")
 
 #### Model building
 
-The model was built with with 60% of the data for training and 40% for testing.
+The model was built with with 70% of the data for training and 30% for testing.
 The survival model parameters where:
-
-```{python pysurvivalperformance, eval=TRUE, echo=FALSE, cache=FALSE, warning = FALSE}
-from pysurvival.utils.metrics import concordance_index
-from pysurvival.utils.display import integrated_brier_score
-from pysurvival.utils.display import compare_to_actual
-
-c_index = concordance_index(csf, X_test, T_test, E_test)
-
-ibs = integrated_brier_score(csf, X_test, T_test, E_test, t_max=12,
-    figure_size=(12,5))
-
-results = compare_to_actual(csf, X_test, T_test, E_test, is_at_risk = False,  
-figure_size=(12, 6), metrics = ['rmse', 'mean', 'median'])
-```
 
 The model accuracy is very high in the first years. The prediction is very
 similar to the actual value. The absolute error mean of 
@@ -463,7 +452,7 @@ hist(nb$Best.nc[1,], breaks = max(na.omit(nb$Best.nc[1,])))
 
 ```
 
-```{python elbowCalculation, eval=TRUE, echo=FALSE, cache=TRUE, warning = FALSE}
+```{python elbowCalculation, eval=TRUE, echo=FALSE, cache=FALSE, warning = FALSE}
 from sklearn.cluster import KMeans
 from sklearn import preprocessing
 from scipy.spatial.distance import cdist
@@ -519,7 +508,7 @@ ax.set_title('Clusters clientes')
 ```
 
 TODO: Estava aqui... fit the model for the five clusters... compare the performance with the model without
-clusters... corrigir acima para selecionar só as features
+clusters... corrigir acima para selecionar só as features.. Explorart-SNE for better visualization... 
 
 ```{python createModelClusters, eval=FALSE, echo=FALSE, cache = TRUE, warning = FALSE}
 # Building training and testing sets for the clusters
