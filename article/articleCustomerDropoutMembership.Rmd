@@ -472,7 +472,7 @@ for k in clusters:
 plt.plot(clusters, meanDistortions, 'bx-')
 plt.xlabel('k')
 plt.ylabel('Average distortion')
-plt.show()
+plt.show();
 
 ```
 
@@ -504,7 +504,7 @@ for cluster in df_members.cluster.unique():
 
 ax.legend()
 ax.grid(True)
-ax.set_title('Clusters clientes')
+ax.set_title('Clusters clientes');
 ```
 
 TODO: Estava aqui... fit the model for the five clusters... compare the performance with the model without
@@ -527,8 +527,7 @@ for cluster in df_members.cluster.unique():
 
     # Fitting the model
     csf = RandomSurvivalForestModel(num_trees=200)
-    csf.fit(X_train, T_train, E_train, max_features='sqrt',
-        max_depth=5, min_node_size=20)
+    csf.fit(X_train, T_train, E_train, max_features='sqrt', max_depth=5, min_node_size=20)
 ```
 
 # Open questions - to remove
