@@ -510,31 +510,32 @@ ax.set_title('Clusters clientes');
 ```
 
 TODO: Estava aqui... fit the model for the five clusters... compare the performance with the model without
-clusters... corrigir acima para selecionar só as features.. Explorart-SNE for better visualization... 
+clusters... corrigir acima para selecionar só as features.. Explorar t-SNE for better visualization... 
 
-```{python createModelClusters, eval=FALSE, echo=FALSE, cache = TRUE, warning = FALSE}
+```{python createModelClusters, eval=TRUE, echo=FALSE, cache = TRUE, warning = FALSE}
 # Building training and testing sets for the clusters
 for cluster in df_members.cluster.unique():
     # Number of samples in the dataset
     df_members_cluster = df_members[df_members.cluster == cluster]
-    N = df_members_cluster.shape[0]
-    index_train, index_test = train_test_split(range(N), test_size = 0.4)
-    data_train = df_members_cluster[features].loc[index_train].reset_index( drop = True )
-    data_test  = df_members_cluster[features].loc[index_test].reset_index( drop = True )
-
-    # Creating the X, T and E inputs
-    X_train, X_test = df_members_cluster[features], data_test[features]
-    T_train, T_test = df_members_cluster[time_column], data_test[time_column]
-    E_train, E_test = df_members_cluster[event_column], data_test[event_column]
-
+    X = df_members_cluster.copy()
+    t = df_members_cluster['years_membership']
+    e = df_members_cluster['dropout']
+    X.drop(axis=1, columns=['years_membership','dropout'])
+    X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, e, random_state=0)
+    print(f"The cluster {cluster} as a size of {X.shape[0]}")
     # Fitting the model
     csf = RandomSurvivalForestModel(num_trees=200)
-    csf.fit(X_train, T_train, E_train, max_features='sqrt', max_depth=5, min_node_size=20)
+    csf.fit(X_train, t_train, e_train, max_features='sqrt',
+        max_depth=5, min_node_size=20)
+
     c_index = concordance_index(csf, X_test, t_test, e_test)
+
     ibs = integrated_brier_score(csf, X_test, t_test, e_test, t_max=12, figure_size=(12,5))
-    results_clusters = compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False,  figure_size=(12, 6), 
-                                metrics = ['rmse', 'mean', 'median'])
-    print(results_clusters)
+
+    results = compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False,  
+                                figure_size=(12, 6), metrics = ['rmse', 'mean', 'median'])
+    print(results)
+
 ```
 
 # Open questions - to remove
