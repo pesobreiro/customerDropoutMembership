@@ -21,13 +21,13 @@ abstract: \noindent\setstretch{1}Abstract of the article. Here we can place more
 bibliography: refMembership.bib
 csl: american-sociological-association.csl
 output:
-  bookdown::word_document2:
-    latex_engine: xelatex
-    number_sections: true
   bookdown::pdf_document2:
     includes:
     toc: no
     keep_tex: true
+    latex_engine: xelatex
+    number_sections: true
+  bookdown::word_document2:
     latex_engine: xelatex
     number_sections: true
 mainfont: Times New Roman
@@ -355,7 +355,7 @@ df_members.drop(columns = to_remove, inplace=True)
 correlation_matrix(df_members[features], figure_size=(10,10), text_fontsize=6)
 ```
 
-```{python createModel, eval=TRUE, echo=FALSE, cache = FALSE, warning = FALSE}
+```{python createModel, eval=FALSE, echo=FALSE, cache = FALSE, warning = FALSE}
 from pysurvival.models.survival_forest import RandomSurvivalForestModel
 from sklearn.model_selection import train_test_split
 from pysurvival.utils.metrics import concordance_index
@@ -485,7 +485,7 @@ cluster = KMeans(n_clusters=5)
 
 cluster.fit(df_members)
 df_members['cluster']=cluster.predict(df_members)
-print(df_members.cluster.value_counts())
+print(df_members.cluster.value_counts());
 ```
 
 
@@ -502,7 +502,7 @@ fig, ax = plt.subplots()
 for cluster in df_members.cluster.unique():
     x = df_members['X_pca'].loc[df_members.cluster == cluster]
     y = df_members['Y_pca'].loc[df_members.cluster == cluster]
-    ax.scatter(x, y, label=cluster, alpha=1, edgecolors='none')
+    ax.scatter(x, y, label=cluster, alpha=1, edgecolors='none');
 
 ax.legend()
 ax.grid(True)
@@ -534,8 +534,9 @@ for cluster in df_members.cluster.unique():
 
     results = compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False,  
                                 figure_size=(12, 6), metrics = ['rmse', 'mean', 'median'])
-    print(results)
-
+    print(f"Cluster {cluster} RMSE {results['root_mean_squared_error']}")
+    print(f"Cluster {cluster} MAE {results['median_absolute_error']}")
+    print(f"Cluster {cluster} MAError {results['mean_absolute_error']}")
 ```
 
 # Open questions - to remove
@@ -669,9 +670,8 @@ perspective.
 In this section, we present our experiments to validate the proposed models,
 comparing against other approaches. The models where optimized using the
 hyper-parameters Grid Search technique. The explored hyper-parameters and the
-best values of these parameters for every model are listed in (ref:table1).
+best values of these parameters for every model are listed in (Table 3).
 
-(ref:table1) Table 2
 
 ```{=latex}
 \begin{table}[ht]
@@ -706,6 +706,39 @@ best values of these parameters for every model are listed in (ref:table1).
 | Survival trees           |                                                      |                 |   
 | without cluster          |                                                      |                 |  
 -->
+```
+
+The results of the performance of the models are available in table 4.
+Colocar o modelo. Resultados do modelo
+```{=latex}
+\begin{table}[ht]
+    \footnotesize
+    \centering
+    \begin{tabular}{p{0.15\textwidth}p{0.55\textwidth}p{0.25\textwidth}}
+    \hline
+    \textbf{Model name} & \textbf{Results} \\
+    \hline
+    Survival trees  & RMSE 2.77 Median Absolute Error 0.0 \\
+    Survival trees
+    with clusters   & Cluster 1: RMSE  2.775 Median Absolute Error  0.000 
+                      Cluster 3: RMSE  8.769 Median Absolute Error  1.276
+                      Cluster 2: RMSE 14.883 Median Absolute Error  2.030
+                      Cluster 4: RMSE  9.624 Median Absolute Error  4.748
+                      Cluster 0: RMSE 77.236 Median Absolute Error 26.066 \\
+    Scikit survival 
+    trees           & scikit survival                           \\
+    Scikit survival 
+    with clusters   & scikit with clusters                      \\
+    Scikit survival 
+    gradient boost  & scikit survival gradient boost           \\
+    Scikit survival 
+    gradient boost 
+    with clusters   & scikit with clusters                      \\
+    \hline
+    \end{tabular}
+    \caption{Hyper-parameters best values}
+    \label{hyperparametersbestvalues}
+\end{table}
 ```
 # Conclusion
 
