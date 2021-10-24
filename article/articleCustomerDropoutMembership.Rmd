@@ -127,7 +127,7 @@ reduce customer churn. Several studies address the problem related to customer
 retention trying to improve the profitability [@coussement_improving_2009;
 @garcia_intelligent_2017; @devriendt_why_2019]
 
-``` {.markdown}
+``` markdown
 If an organization can predict a possible dropout and
 develop countermeasures to avoid desertion, they can avoid customer defections that 
 lead to a loss of money. Reichheld (1996) evidenced that reducing dropout rates by 5% 
@@ -159,8 +159,8 @@ customer dropout [@perianez_churn_2016]. @perianez_churn_2016 used survival
 analysis to predict also when the dropout will occur.
 
 Other studies proposed also the integration of several algorithms to improve the
-performance in the prediction of the dropout such the usage of clusters
-combined with churn prediction [@hung_applying_2006; @gok_case_2015;
+performance in the prediction of the dropout such the usage of clusters combined
+with churn prediction [@hung_applying_2006; @gok_case_2015;
 @vijaya_sivasankar_2019]. The approach relies in the assumption that combining
 the customers in different clusters allows the improvement of the prediction
 accuracy. @vijaya_sivasankar_2019 suggested the adoption hybrid models combining
@@ -169,10 +169,10 @@ using single classifiers.
 
 There are several challenges around the timing related to dropout, or
 considering the dynamic behavior of the customer in the intent to drop out
-[@alboukaey_dynamic_2020]. The importance of understanding when dropout will
+\[@alboukaey_dynamic_2020\]. The importance of understanding when dropout will
 occur and the risk when discarding the temporal perspective of the problem seems
 to be an element that should be addressed. Few studies considered this
-[@perianez_churn_2016; @burez_separating_2008]. This shows an opportunity to
+\[@perianez_churn_2016; @burez_separating_2008\]. This shows an opportunity to
 address the importance of the timeframe and its influence on the efficiency of
 the model and also evalute if the combination of clusters could improve the
 performance.
@@ -355,7 +355,7 @@ df_members.drop(columns = to_remove, inplace=True)
 correlation_matrix(df_members[features], figure_size=(10,10), text_fontsize=6)
 ```
 
-```{python createModel, eval=FALSE, echo=FALSE, cache = FALSE, warning = FALSE}
+```{python createModel, eval=TRUE, echo=FALSE, cache = FALSE, warning = FALSE}
 from pysurvival.models.survival_forest import RandomSurvivalForestModel
 from sklearn.model_selection import train_test_split
 from pysurvival.utils.metrics import concordance_index
@@ -370,8 +370,8 @@ X.drop(axis=1, columns=['years_membership','dropout'])
 X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, e, test_size=0.3, random_state=0)
 
 # Fitting the model
-csf = RandomSurvivalForestModel(num_trees=200)
-csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, min_node_size=20)
+csf = RandomSurvivalForestModel(num_trees=20)
+csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, min_node_size=20, seed = 1)
 
 c_index = concordance_index(csf, X_test, t_test, e_test)
 ibs = integrated_brier_score(csf, X_test, t_test, e_test, t_max=12, figure_size=(12,5))
@@ -393,24 +393,20 @@ The model was built with with 70% of the data for training and 30% for testing.
 The survival model parameters where:
 
 The model accuracy is very high in the first years. The prediction is very
-similar to the actual value. The absolute error mean of 
+similar to the actual value. The absolute error mean of
 `r round(py$results$mean_absolute_error,0)` customers.
-
-
-
 
 ### Survival trees based model with clusters
 
 Here we are will create clusters and developed the optimization within each
-cluster... 
+cluster...
 
-The calculation of he number of clusters used the package mclust
-[@scrucca2016] using the Bayesian Information Criterion (BIC). The model that
-gives the minimum BIC score can be selected as the best model [@schwarz1978]
-simplifying the problem related to choosing the number of components and
-identifying the structure of the covariance matrix, based on modelling with
-multivariate normal distributions for each component that forms the data set
-[@akogul2016].
+The calculation of he number of clusters used the package mclust [@scrucca2016]
+using the Bayesian Information Criterion (BIC). The model that gives the minimum
+BIC score can be selected as the best model [@schwarz1978] simplifying the
+problem related to choosing the number of components and identifying the
+structure of the covariance matrix, based on modelling with multivariate normal
+distributions for each component that forms the data set [@akogul2016].
 
 In multivariate models are available the following approaches:
 
@@ -421,10 +417,9 @@ In multivariate models are available the following approaches:
     default for initialization of EM algorithm
 -   VVI": diagonal, varying volume and shape t
 
-
-Estou a ter problemas com o cálculo dos clusters com o BIC... 
-estava a aqui a confirmar os clusters, talvez seja melhor reduzir as variáveis...
-testar a abordagem aos clusters no artigo dos vinhos...
+Estou a ter problemas com o cálculo dos clusters com o BIC... estava a aqui a
+confirmar os clusters, talvez seja melhor reduzir as variáveis... testar a
+abordagem aos clusters no artigo dos vinhos...
 
 ```{r clusters, eval=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 library(mclust)
@@ -488,7 +483,6 @@ df_members['cluster']=cluster.predict(df_members)
 print(df_members.cluster.value_counts());
 ```
 
-
 ```{python kmeans PCA, eval=TRUE, echo=FALSE, cache=FALSE, warning = FALSE}
 from sklearn.decomposition import PCA
 
@@ -509,8 +503,9 @@ ax.grid(True)
 ax.set_title('Clusters clientes');
 ```
 
-TODO: Estava aqui... fit the model for the five clusters... compare the performance with the model without
-clusters... corrigir acima para selecionar só as features.. Explorar t-SNE for better visualization... 
+TODO: Estava aqui... fit the model for the five clusters... compare the
+performance with the model without clusters... corrigir acima para selecionar só
+as features.. Explorar t-SNE for better visualization...
 
 ```{python createModelClusters, eval=TRUE, echo=FALSE, cache = TRUE, warning = FALSE}
 # Building training and testing sets for the clusters
@@ -524,9 +519,9 @@ for cluster in df_members.cluster.unique():
     X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, e, random_state=0)
     print(f"The cluster {cluster} as a size of {X.shape[0]}")
     # Fitting the model
-    csf = RandomSurvivalForestModel(num_trees=200)
+    csf = RandomSurvivalForestModel(num_trees=20)
     csf.fit(X_train, t_train, e_train, max_features='sqrt',
-        max_depth=5, min_node_size=20)
+        max_depth=5, min_node_size=20, seed = 1)
 
     c_index = concordance_index(csf, X_test, t_test, e_test)
 
@@ -602,10 +597,10 @@ improve the model accuracy [@azeem_churn_2017].
 
 There are several challenges around the timing related to dropout, or
 considering the dynamic behavior of the customer in the intent to drop out
-[@alboukaey_dynamic_2020]. The importance of understanding when dropout will
+\[@alboukaey_dynamic_2020\]. The importance of understanding when dropout will
 occur and the risk when discarding the temporal perspective of the problem seems
 to be an element that should be addressed. Few studies considered this
-[@perianez_churn_2016; @burez_separating_2008]. This shows an opportunity to
+\[@perianez_churn_2016; @burez_separating_2008\]. This shows an opportunity to
 address the importance of the timeframe and its influence on the efficiency of
 the model.
 
@@ -622,16 +617,16 @@ From RQ5, the literature analysis showed that different types of questions
 arise. Which are the best approaches to develop the analysis of the performance
 in predicting dropout? Several metrics are customer dropout is to improve the
 performance of organizations in retaining customers, which is a management
-problem in which data mining is adopted [@verbeke_new_2012]. The goals of the
+problem in which data mining is adopted \[@verbeke_new_2012\]. The goals of the
 model should be formulated considering the context of the problem that is being
 addressed; in marketing retention strategies, the up-lift supports the
 development of proactive actions to minimize the investment in retention
-strategies [@coussement_churn_2008]. Some assumptions that underlie the adoption
-of uplift metrics consider that customers with a higher risk of churning could
-not be the best targets, as suggested by @ascarza_retention_2018. Other
-researchers addressed the problem using the top-decile lift to develop more
-proactive actions to retain the customers at risk of churning
-[@coussement_churn_2008;xie_customer_2009]. This approach considers the 10% of
+strategies \[@coussement_churn_2008\]. Some assumptions that underlie the
+adoption of uplift metrics consider that customers with a higher risk of
+churning could not be the best targets, as suggested by @ascarza_retention_2018.
+Other researchers addressed the problem using the top-decile lift to develop
+more proactive actions to retain the customers at risk of churning
+\[@coussement_churn_2008;xie_customer_2009\]. This approach considers the 10% of
 customers with more risk, and investments in retention strategies should be
 developed that distinguish the churners susceptible to marketing actions from
 those who will leave anyway [@coussement_comparative_2017]. Although uplift
@@ -672,7 +667,6 @@ comparing against other approaches. The models where optimized using the
 hyper-parameters Grid Search technique. The explored hyper-parameters and the
 best values of these parameters for every model are listed in (Table 3).
 
-
 ```{=latex}
 \begin{table}[ht]
     \footnotesize
@@ -699,45 +693,40 @@ best values of these parameters for every model are listed in (Table 3).
     \label{hyperparametersbestvalues}
 \end{table}
 ```
-```{=html}
-<!--
-|        Model name        | Explored hyper-parameters' values                    | Best parameters |
-| ------------------------ | ---------------------------------------------------- | --------------- |
-| Survival trees           |                                                      |                 |   
-| without cluster          |                                                      |                 |  
--->
-```
+The results of the performance of the models are available in table 4. Colocar o
+modelo. Resultados do modelo
 
-The results of the performance of the models are available in table 4.
-Colocar o modelo. Resultados do modelo
 ```{=latex}
 \begin{table}[ht]
     \footnotesize
     \centering
-    \begin{tabular}{p{0.15\textwidth}p{0.55\textwidth}p{0.25\textwidth}}
+    \begin{tabular}{p{0.15\textwidth}p{0.35\textwidth}r p{0.10\textwidth}}
     \hline
-    \textbf{Model name} & \textbf{Results} \\
+    \textbf{Model name} & \textbf{Results} & \textbf{n}\\
     \hline
-    Survival trees  & RMSE 2.77 Median Absolute Error 0.0 \\
-    Survival trees
-    with clusters   & Cluster 1: RMSE  2.775 Median Absolute Error  0.000 
-                      Cluster 3: RMSE  8.769 Median Absolute Error  1.276
-                      Cluster 2: RMSE 14.883 Median Absolute Error  2.030
-                      Cluster 4: RMSE  9.624 Median Absolute Error  4.748
-                      Cluster 0: RMSE 77.236 Median Absolute Error 26.066 \\
+    Survival trees  & RMSE 57.815                                     & 25316\\
+                    & MAE 18.966                                      & \\   
+                    & MEAE 38.557                                     & \\
+    Survival trees  & Cluster 0: RMSE  2.785 MAE  0.000 MEAE  0.899   &   930\\
+    with clusters   & Cluster 1: RMSE 78.141 MAE 28.537 MEAE 56.989   & 17067\\
+                    & Cluster 2: RMSE 15.081 MAE  1.995 MEAE  6.850   &  2423\\
+                    & Cluster 3: RMSE  9.354 MAE  2.506 MEAE  6.427   &  2816\\
+                    & Cluster 4: RMSE  8.805 MAE  1.349 MEAE  3.725   &  2080\\
+                    
     Scikit survival 
-    trees           & scikit survival                           \\
+    trees           & scikit survival                                 & \\
     Scikit survival 
-    with clusters   & scikit with clusters                      \\
+    with clusters   & scikit with clusters                            & \\
     Scikit survival 
-    gradient boost  & scikit survival gradient boost           \\
+    gradient boost  & scikit survival gradient boost                  & \\
     Scikit survival 
     gradient boost 
-    with clusters   & scikit with clusters                      \\
+    with clusters   & scikit with clusters                            & \\
     \hline
     \end{tabular}
     \caption{Hyper-parameters best values}
     \label{hyperparametersbestvalues}
+    * Root Mean Square Error (RMSE), Mean Absolute Error (MAE), Median Absolute Error (MEAE)  
 \end{table}
 ```
 # Conclusion
@@ -751,9 +740,9 @@ Ascarza, E. (2018). Retention Futility: Targeting High-Risk Customers Might be
 Ineffective. Journal of Marketing Research, 55(1), 80-98. sim.
 <https://doi.org/10.1509/jmr.16.0163>
 
-Example of Developed actions:
+Example of Developed actions place in the discussion:
 
-``` {.markdown}
+``` markdown
 Each month, the company identified the customers who were up for renewal and
 split them (randomly and evenly) between a treatment group that received a 
 "thank you" gift with the letter and a control group that received only the 

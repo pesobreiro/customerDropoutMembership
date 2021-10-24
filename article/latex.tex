@@ -1,0 +1,54 @@
+\documentclass{article}
+    % General document formatting
+    \usepackage[margin=0.7in]{geometry}
+    \usepackage[parfill]{parskip}
+    \usepackage[utf8]{inputenc}
+    
+    % Related to math
+    \usepackage{amsmath,amssymb,amsfonts,amsthm}
+
+\begin{document}
+
+Name, date, Exercise X
+
+\section*{Part a}
+
+Put your answer to part a here
+
+\section*{Part b}
+
+etc
+
+\begin{table}[ht]
+    \footnotesize
+    \centering
+    \begin{tabular}{p{0.15\textwidth}p{0.35\textwidth}r p{0.10\textwidth}}
+    \hline
+    \textbf{Model name} & \textbf{Results} & \textbf{n}\\
+    \hline
+    Survival trees  & RMSE 57.815                                     & 25316\\
+                    & MAE 18.966                                      & \\   
+                    & MEAE 38.557                                     & \\
+    Survival trees  & Cluster 0: RMSE  2.785 MAE  0.000 MEAE  0.899   &   930\\
+    with clusters   & Cluster 1: RMSE 78.141 MAE 28.537 MEAE 56.989   & 17067\\
+                    & Cluster 2: RMSE 15.081 MAE  1.995 MEAE  6.850   &  2423\\
+                    & Cluster 3: RMSE  9.354 MAE  2.506 MEAE  6.427   &  2816\\
+                    & Cluster 4: RMSE  8.805 MAE  1.349 MEAE  3.725   &  2080\\
+                    
+    Scikit survival 
+    trees           & scikit survival                                 & \\
+    Scikit survival 
+    with clusters   & scikit with clusters                            & \\
+    Scikit survival 
+    gradient boost  & scikit survival gradient boost                  & \\
+    Scikit survival 
+    gradient boost 
+    with clusters   & scikit with clusters                            & \\
+    \hline
+    \end{tabular}
+    \caption{Hyper-parameters best values}
+    \label{hyperparametersbestvalues}
+    * Root Mean Square Error (RMSE), Mean Absolute Error (MAE), Median Absolute Error (MEAE)  
+\end{table}
+
+\end{document}
