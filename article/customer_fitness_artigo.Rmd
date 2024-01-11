@@ -1,0 +1,1282 @@
+---
+title: |
+  |
+  |
+  |
+  | \vspace{1cm}Health club customer dropout membership^[Corresponding address: sobreiro@esdrm.ipsantarem.pt. Quality of Life Research Centre, Polytechnic Institute of Santarém, Portugal]\vspace{0.5cm}
+author: |
+  | Pedro Sobreiro, Javier Berrocal, Domingos Martinho, José Garcia Alonso
+  |
+  | Extremadura University
+  |
+date: |
+  |
+  |
+  | `r gsub("^0", "", format(Sys.time(), "%d %B, %Y"))`
+  |
+  |
+linestretch: 1.2
+colorlinks: true
+abstract: \vspace{1cm} Customer retention is fundamental to improve the organizations profits. Existing approaches normaly explore static models predicting when the customer will dropout. In this paper we propose a different approach considering that the customer dropout risk changes over time using clusters to improve the model performance. We explore a survival model using random forests with and with out clusters in a dataset of 5209 customers. The model using clusters improved the performance significantly. This paper shows that the use of clusters should be considered to identify dropout patterns to support the timming when the dropout occurs considering the cluster where the customer is. Improving the performance as less errors and is expected to contribute to the identification when should be developed retention strategies. \vspace{.8cm} 
+bibliography: references.bib
+csl: american-sociological-association.csl
+output:
+  bookdown::pdf_document2:
+    includes:
+    toc: no
+    keep_tex: true
+    latex_engine: xelatex
+    number_sections: true
+  bookdown::word_document2:
+    latex_engine: xelatex
+    number_sections: true
+mainfont: Times New Roman
+sansfont: Times New Roman
+fontsize: 12pt
+link-citations: true
+documentclass: article
+geometry: margin = 1in
+always_allow_html: yes
+header-includes:
+   - \usepackage{dcolumn}
+   - \usepackage{color}
+   - \usepackage{pdfpages}
+   - \usepackage{amsmath}
+   - \usepackage{booktabs}
+   - \usepackage{makecell}
+   - \usepackage{hyperref}
+   - \usepackage{threeparttable}
+   - \usepackage{threeparttablex}
+editor_options: 
+  markdown: 
+    wrap: 80
+---
+
+```{r Setup, include = FALSE}
+knitr::opts_chunk$set(cache = FALSE, warning = FALSE, message = FALSE)
+# Use cache = TRUE if you want to speed up compilation
+# set path
+# get rmarkdown directory
+caminho <- getwd()
+# set working directory
+setwd(caminho)
+print(caminho)
+# A function to allow for showing some of the inline code
+rinline <- function(code) {
+  html <- '<code  class = "r">``` `r CODE` ```</code>'
+  sub("CODE", code, html)
+}
+```
+
+```{r RETICULATE, message=FALSE, warning=FALSE, include=FALSE}
+# load essential libraries
+library(dplyr)
+library(dlookr)
+library(ggplot2)
+library(reticulate)
+#Replace by your environment, usually which python solves the problem
+#conda env list also is a good option
+#set environment first then call reticulate library
+path_python_windows <- "C:\\Users\\sobre\\AppData\\Local\\r-miniconda\\envs\\rsurvival\\python.exe"
+path_python_linux <- "/home/sobreiro/miniconda3/envs/survival/bin/python"
+switch(Sys.info()[["sysname"]],
+       Windows = {
+            Sys.setenv(RETICULATE_PYTHON = path_python_windows)
+            #call reticulate
+            library(reticulate)
+            #activate environment
+            use_condaenv("rsurvival", required = TRUE)
+            caminho_figuras <- "c:/nuvem/Dropbox/doutoramento/tese/9.tese_documento/PhD-Pedro-Sobreiro/figures/"
+       },
+       Linux = {
+            Sys.setenv(RETICULATE_PYTHON = path_python_linux)
+            library(reticulate)
+            use_condaenv("survival", required = TRUE)
+            matplotlib <- import("matplotlib")
+            matplotlib$use("Agg", force = TRUE)
+            # https://community.rstudio.com/t/reticulate-rstudio-matplotlib/33219
+            caminho_figuras <- "/mnt/c/nuvem/Dropbox/doutoramento/tese/9.tese_documento/PhD-Pedro-Sobreiro/figures/"
+       }
+)
+```
+
+# Introduction
+
+Customer retention is a problem is a problem being addressed using the dropout 
+prediction as an insight to identify customers that could dropout.
+The customers database is the most valuable asset that the organizations possess
+[@Athanassopoulos_2000].
+The problem of retention is not new, in a seminal paper @Copeland_1923 address
+the problem of brand loyalty and in marketing research [@Mellens_Dekimpe_Steenkamp_1996].
+
+The advantage of developing some strategies in retention are supported in the idea
+that the costs of customer retention are lower than customer acquisition 
+[@Fornell_Wernerfelt_1987; @Edward_Sahadev_2011].
+The increase in the profits with the reduction of 5\% of the dropout could represent
+almost a duplication of the profits [@Reichheld_1996].
+
+The development of a customer retention strategy could be supported in the 
+identification of the customers that will dropout [@alboukaey_dynamic_2020]. 
+However, dropout has two underlying scenarios contractual and non-contractual 
+settings {@Gupta2006Modeling; @ascarza_retention_2018},
+in a contractual business the customer needs to renew their contracts to continue its usage
+[@Ascarza_Hardie_2013], against non contractual where the firm has to infer if 
+the customer is still active
+However, in contractual settings the customer dropout represents an explicit
+ending of a relationship which is more penalizing than non contractual settings
+[@risselada_staying_2010]. 
+This has implications to the profitability of the organizations increasing marketing 
+costs and reducing sales [@amin_customer_2017].
+
+The anticipation of the dropout allows the development of countermeasures to
+reduce customer churn. Several studies address the problem related to customer
+retention trying to improve the profitability [@coussement_improving_2009;
+@garcia_intelligent_2017; @devriendt_why_2019].
+Existing organizations are addressing this problem by shifting their target from 
+capturing new customers to preserving existing ones [@garcia_intelligent_2017],
+considering that investments in retention strategies are more profitable 
+than acquiring new customers [@coussement_improving_2009]. 
+
+The approaches normally employed use a dependent variable representing dropout
+or non-dropout, without considering a dynamic perspective that the dropout risk
+changes over time [@Alboukaey_dynamic_2020]. The survival models try to solve
+this limitation [@routh_estimating_2020] capturing a temporal dimension of the
+customer dropout [@perianez_churn_2016]. @perianez_churn_2016 used survival
+analysis to predict also when the dropout will occur.
+
+Other studies proposed also the integration of several algorithms to improve the
+performance in the prediction of the dropout such the usage of clusters combined
+with churn prediction [@hung_applying_2006; @gok_case_2015;
+@vijaya_sivasankar_2019]. The approach relies in the assumption that combining
+the customers in different clusters allows the improvement of the prediction
+accuracy. @vijaya_sivasankar_2019 suggested the adoption hybrid models combining
+more than one classier are achieving increased performance compared to those
+using single classifiers.
+
+There are several challenges around the timing related to dropout, or
+considering the dynamic behavior of the customer in the intent to drop out
+[@alboukaey_dynamic_2020]. The importance of understanding when dropout will
+occur and the risk when discarding the temporal perspective of the problem seems
+to be an element that should be addressed. Few studies considered this
+[@perianez_churn_2016; @burez_separating_2008]. This shows an opportunity to
+address the importance of the timeframe and its influence on the efficiency of
+the model and also evalute if the combination of clusters could improve the
+performance.
+
+Survival analysis, which origin as stands in biomedical statistics, its especially 
+well-suited to studying the timing of events in longitudinal data [@Singer_Willett_1993]. 
+Survival analysis is a class of statistical methods modelling the occurrence and timing of 
+an event, such as the customer dropout. 
+Survival analysis allow us to examine not only if an event occurred but also how long it 
+took to occur. 
+A primary value of survival analysis, however, is to compare dropout probability for 
+individuals classified with theoretically relevant variables. 
+The survival methods have enjoyed and increasing popularity in several disciplines ranging 
+from medicine to economics [@Singer_Willett_1993].
+
+Random Survival Forests does not make the proportional hazards assumption
+[@Ehrlinger_2016] and has the flexibility to model survivor curves that are of
+dissimilar shapes for contrasting groups of subjects. Random Survival Forest is
+an extension of Random Forest allowing efficient non-parametric analysis of time
+to event data [@Breiman_2001]. This characteristics allow us to surpass the Cox
+Regression limitation of the proportional hazard assumption, requiring to
+exclude variables which not fulfill the model assumption. It was shown by
+@Breiman_2001 that ensemble learning can be further improved by injecting
+randomization into the base learning process - a method called Random Forests.
+
+
+Some studies employed also a combination of clusters with the churn prediction 
+[@hung_applying_2006;@gok_case_2015;@vijaya_sivasankar_2019], where the customers
+where grouped in clusters to improve the accuracy within each cluster.
+Clusters are approaches using unsupervised algorithms to group elements
+with similar characteristics. 
+This unsupervised method has been widely used employing approaches
+such Hierarchical Clustering [@Saunders_1980], K-Means [@vijaya_sivasankar_2019], or
+Random Forest Clustering [@Breiman_2001].
+@JafariMarandi_Denton_Idris_Smith_Keramati_2020 explored an approach combining
+clustering methods in parallel to a classification.
+
+In this study, we investigate if an hybrid approach using clusters and random survival forests 
+which have never been used in to predict membership in a health club using existing data 
+improves the prediction accuracy. 
+Our paper is organized as follows. In the next section, we address our research methodology,
+using survival analysis to identify the survival probability along the time, how 
+we address the problem of determining the clusters and the performance of the model 
+to predict customer survival within each identified cluster.
+
+
+
+# Survival analysis
+
+Survival analysis focus in the analysis of the time until an event of interest,
+and exploring its relationship with different factors.
+The main advantage is related to the concept of censoring, indicating
+that observations that are not complete related to the event of interest, e.g.
+customers that didn't dropout yet, which are incorporated in the analysis.
+This means that there are customers still active for which we don't know if 
+the event of dropout has occurred, which is called censorship.
+Survival models take censoring into account and incorporate this uncertainty, 
+instead of predicting the time of event such in regression models, the survival models
+allow to predict the probability of an event happens at a particular time.
+
+The time of dropout is represented by T, which is a non-negative random variable, 
+indicating the time period of the event occurring for a randomly selected individual 
+from the population, representing the probability of an event to occur each time period given 
+that has not already occurred in a previous time period, known as discrete-time hazard function 
+[@Singer_Willett_1993]. 
+The survival function represents the probability of an individual surviving after time t, 
+S(t) = P(T $>$ t), t $\geq$ 0, with the properties S(0) = 1,S($\infty$) = 0. 
+The distribution function is represented with F, defined as F(t) = P(T $\leq$ 0), for t $\geq$ 0. 
+The function of probability density represented with f where:
+
+\begin{equation}
+f(t) = \lim_{dt{\to 0}} \frac{P[t \le T < t + dt ]}{dt}
+\end{equation}
+
+$f(t)dt$ represents the probability of an event occurring in the moment t. 
+The need to represent the distribution evolution of the death probability along the time, 
+uses to the hazard function, represented as:
+
+\begin{equation}
+\lambda(t) = \lim_{dt \to 0} \frac{P[t \le T < t + dt | T \ge t ]}{dt}
+\end{equation}
+
+The determination of the survival curves is based in the following elements: 
+(1) the total value of observations removed during the time period (e.g. days, months or years), 
+    either by dropout or by censorship; 
+(2) observations that composed the sample of the study; 
+(3) customers who had not yet dropped out at any given time. 
+The survival probability until the time period ii ($p_i$) is calculated with:
+
+\begin{equation}
+p_i=\frac{r_i-d_i}{r_i}
+\end{equation}
+
+
+Where $r_i$ is the number of individuals that survived at the beginning of the period, 
+$d_i$ the number of individuals who left during the period. 
+The survival time estimate was also taken considering the month in which it is found (estimated). 
+Cox's allow test difference between survival times. 
+The advantage in using survival analysis was that allow us to detect if the risk of an event differs 
+systematically across different people, using specific predictors. 
+The coefficients in a Cox regression were related to the hazard, where a positive value 
+represents a worse prognosis and the opposite, negative value a better prognosis.
+The advantage of survival analysis was that allow us to include information of covariates
+that were censored up to the censoring event.
+
+
+The Cox PH model assumes the covariates to be time independent, for example
+gender and age when where retrieved do not change over time [@Schober2018Survival]
+Because the Cox model requires the hazards in both groups to be proportional, 
+researchers are often asked to "test" whether hazards are proportional
+[@Stensrud_Hernán_2020].
+Considering this we explored other approach that allow us to develop this analysis without 
+the proportional hazard assumptions, the survival trees.
+
+
+# Survival Trees
+
+Survival trees are methods based in tree based models based on Random Forest [@Breiman_2001].
+Random survival forests is an ensemble method for analysis of right-censored
+data [@Ishwaran_Kogalur_Blackstone_Lauer_2008], using randomization to 
+improve the performance.
+Random survival forests follows this framework [@Ishwaran_Kogalur_Blackstone_Lauer_2008]:
+
+1. Draw B random samples of the same size from the original dataset with replacement. The samples that are not drawn are said to be out-of-bag (OOB). Grow a survival tree on each of the b = 1 , . . . , B samples.
+2. At each node, select a random subset of predictor variables and find the best predictor and splitting value that provide two subsets (the daughter nodes) which maximizes the difference in the objective function.
+3. Repeat step 2 recursively on each daughter node until a stopping criterion is met.
+4. Calculate a cumulative hazard function (CHF) for each tree and average over all CHFs for the B trees to obtain the ensemble CHF.
+5. Compute the prediction error for the ensemble CHF using only the OOB data.
+
+In each node is selected a predictor $x$ from a random selected predicted variables
+and split value $c$ (one unique value of $x$).
+Each sample $i$ if assigned the daughter right node if $x_i \le c$ or left if 
+$x_i \ge c$, then is calculated the logrank such as:
+
+\begin{equation}
+L(x, c) = \frac{ \sum^{N}_{i=1} \left(  d_{i, 1} - Y_{i,1} \frac{d_i}{Y_i} \right)  }
+               { \sqrt{  \sum^{N}_{i=1}  \frac{Y_{i,1}}{Y_i} \left( 1 - \frac{Y_{i,1}}{Y_i} \right) \left( \frac{Y_i-d_i}{Y_i-1} \right) d_i  } }
+\end{equation}
+
+Where:
+
+* $j$: Daughter node, $j \in \{1,2\}$
+* $d_{i,j}$: Number of events at time $t_i$ in daughter node $j$
+* $Y_{i,j}$: Number of elements that had the event or are in risk at time $t_i$
+           in daughter node $j$
+* $d_i$: Number of events at time $t_i$, such $d_i=\sum_j{d_{i,j}}$
+* $Y_i$: Number of elements that experienced an event or are at risk at
+      $t_i$ so $Y_i=\sum_j Y_{i,j}$ 
+
+We loop every $x$ and $c$ until find $x^*$ that satisfy $|L(x^{*}, c^{*})| \geq |L(x, c)|$
+for every $x$ and $c$.
+The model performance was determined with the concordance probability (C-index),
+Brier Score (BS) and Mean Absolute Error (MAE) [@wangmachine2017]. The feature
+importance was determined calculating the difference between the true class
+label and noised data [@Breiman_2001].
+
+The BS is used to evaluate the predicted accuracy of the survival function
+at a given time $t$. 
+Representing the average square distance between the survival status and the
+predicted survival probability, where the value 0 is the best possible outcome.
+
+\begin{equation}
+BS(t) =  \frac{1}{N} \sum_{i = 1}^{N} \left( \frac{\left( 0 - \hat{S}(t, \vec{x}_i)\right)^2 \cdot \mathbb{1}_{T_i \leq t, \delta_i = 1}}{ \hat{G}(T_i^-)} + \frac{ \left( 1 - \hat{S}(t, \vec{x}_i)\right)^2 \cdot \mathbb{1}_{T_i > t}}{ \hat{G}(t)} \right)
+\end{equation}
+
+The model should have a Brier score below $0.25$. 
+Considering that if $\forall i \in [\![1, N]\!], \hat{S}(t, \vec{x}_i) = 0.5$, then $BS(t) = 0.25$.
+
+
+# Methodology
+
+To simplify the analysis, the survival probabilities are presented as a survival curve. 
+The survival curve is a representation of the survival probabilities corresponding to a 
+time where the events are observed [@Bland_Altman_1998].
+The survival analysis was conducted using the package Lifelines [@Pilon_2021].
+Where dropout is a binary value where one represent churn and zero not churn. The
+dropout happens when a member does not have a payment.
+
+The random survival forest was developed using the package PySurvival
+[@Fotso_others_2019]. PySurvival is an open source python package for 
+Survival Analysis modeling - the modeling concept used to analyze or predict 
+when an event is likely to happen.
+The model was built with with 70\% of the data for training and 30\% for testing.
+
+The model performance was determined with the concordance probability (C-index),
+Brier Score (BS) and Mean Absolute Error (MAE) [@wangmachine2017]. The feature
+importance was determined calculating the difference between the true class
+label and noised data [@Breiman_2001].
+
+The BS measure the average discrepancies between the status (dropout/non-dropout)
+and the estimated probabilities at a given time.
+The Integrated Brier Score (IBS) was used to calculate the performance 
+in all available times (from $t_1$ to $t_{max}$) as:
+
+\begin{equation}
+IBS = \int_{t_1}^{t_\text{max}} {BS}^c(t) d w(t)
+\end{equation}
+
+Representing the average square distance between the survival status and the
+predicted survival probability, where the value 0 is the best possible outcome.
+
+The calculation of he number of clusters used the package mclust [@scrucca2016]
+using the Bayesian Information Criterion (BIC). The model that gives the minimum
+BIC score can be selected as the best model [@schwarz1978] simplifying the
+problem related to choosing the number of components and identifying the
+structure of the covariance matrix, based on modelling with multivariate normal
+distributions for each component that forms the data set [@akogul2016].
+
+The hybrid approach was develop as follows:
+
+1. Identify the optimal number of clusters using [@scrucca2016]
+2. Fit the model using the identified number of clusters
+3. Estimate for each element the cluster 
+4. for each cluster follow the framework proposed by @Ishwaran_Kogalur_Blackstone_Lauer_2008
+   to calculate the random survival model
+
+# Dataset
+
+In this study, data from 5,209 fitness customers was analysed (mean age = 27.88, SD=11.80 years) 
+from a Portuguese fitness centre. 
+The data was collected from software e\@sport (Cedis, Portugal) between 2014 and 2017. 
+The information retrieved was: Age of the participants in years; Sex (0-female, 1-male); 
+Non-attendance days before dropout; Total amount billed; Average number of visits per week;
+Total number of visits; Weekly contracted accesses; Number of registration renewals; 
+Number of customer referrals; Registration month; Customer enrolment duration; and status 
+(dropout/non-dropout).
+Dropout event occur when customer communicate the intention to terminate the contract or 
+did not pay the monthly fee during 60 days.
+
+
+```{r get_data, echo = FALSE, message = FALSE, warning=FALSE, include = FALSE}
+library(stargazer)
+library(readxl)
+library(dplyr)
+library(visdat)
+
+df_members <- read_excel("data/fitness_customers.xlsx")
+
+
+# rename column labels
+names(df_members) <- c("id", "age", "sex", "dayswfreq", "tbilled",
+                       "maccess", "freeuse", "nentries", "cfreq", "nrenewals",
+                       "cref", "start_date", "months", "dropout")
+
+
+# remove null values
+df_members <- df_members[complete.cases(df_members), ]
+
+names(df_members)
+
+# select relevant variables
+df_members <- df_members %>%
+select(age, sex, dayswfreq, tbilled, maccess, freeuse,
+       nentries, cfreq, months, dropout)
+
+str(df_members)
+vis_dat(df_members) #check
+```
+
+Table \@ref(tab:summarytable) shows data's summary statistics. The average age
+is `r round(mean(df_members$age,na.rm = TRUE),1)` ±
+`r round(sd(df_members$age,na.rm = TRUE),1)`, the entries are 
+`r round(mean(df_members$nentries,na.rm = TRUE),0)` ±
+`r  round(sd(df_members$nentries,na.rm = TRUE),1)` with an inscription period of
+`r round(mean(df_members$months,na.rm = TRUE),0)` ±
+`r  round(sd(df_members$months,na.rm = TRUE),1)` months.
+
+```{r teste, eval=FALSE, message=FALSE, warning=FALSE, echo=FALSE, paged.print=FALSE}
+library(stargazer)
+df_summary <- summary(df_members)
+stargazer(df_members,
+          title = "Summary statistics",
+          label = "tab1cars",
+          table.placement = "h",
+          header = FALSE,
+          summary = TRUE,
+          summary.stat = c("min", "p25", "median", "p75", "max", "median", "sd")
+         )
+```
+
+```{r summarytable, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(gtsummary)
+library(kableExtra)
+library(labelled)
+
+var_label(df_members$age) <- "Age in years"
+var_label(df_members$sex) <- "Male or female"
+
+tbl <- df_members %>%
+    tbl_summary(statistic = list(all_continuous() ~ "{mean} ({sd})",
+                                 all_categorical() ~ "{p}%"),
+                type = list(age ~ "continuous")) %>%
+    add_stat_label()
+
+as_kable_extra(tbl, booktabs = T,
+               caption = "Summary statistics of features used")
+```
+Figure \@ref(fig:membershipmonth) shows the distribution of the dropout
+considering the number of months of membership.
+
+```{r, label="membershipmonth", eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Number of members by month"}
+members_month <- df_members %>%
+  select(months, dropout) %>%
+  group_by(months, dropout) %>%
+  summarize(count = n())
+
+members_month$dropout <- factor(members_month$dropout)
+g <- ggplot(data = members_month,
+            mapping = aes(x = months, y = count, linetype = dropout))
+g <- g + geom_line() + labs(x = "months", y = "Number of members") +
+    theme_classic()
+g
+
+# Export the file 
+# ggsave(file="/mnt/c/nuvem/Dropbox/doutoramento/tese/9.tese_documento/PhD-Pedro-Sobreiro/figures/membershipyear.pdf",device="pdf")
+```
+
+```{python correlationMatrix, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap = "Correlation matrix"}
+from pysurvival.utils.display import correlation_matrix
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+col = ['sex']
+
+df_members = r.df_members #copy r dataframe to python
+
+# convert to int
+df_members['age']=df_members['age'].astype(int)
+df_members['dayswfreq']=df_members['dayswfreq'].astype(int)
+df_members['cfreq']=df_members['cfreq'].astype(int)
+df_members['months']=df_members['months'].astype(int)
+df_members['dropout']=df_members['dropout'].astype(int)
+df_members['sex']=df_members['sex'].astype(int)
+
+df_members = pd.get_dummies(df_members, columns=col,drop_first=True)
+
+# Creating the time and event columns
+time_column = 'months'
+event_column = 'dropout'
+
+# Extracting the features
+features = np.setdiff1d(df_members.columns, [time_column, event_column] ).tolist()
+
+
+correlation_matrix(df_members[features], figure_size=(10,10), text_fontsize=6)
+
+r.df_members = df_members
+
+#plt.plot()
+```
+
+# Results
+
+The table \@ref(tab:survivalprobabilities) depicts the data of the survival time of the customers 
+during the first months, the results showed that the customers have a survival probability of 24.44\% 
+at 12 months (column $p_i$ - likelihood probability) with a median survival time of 10 months
+(column estimated_survival).
+The survival probability at 6 months was 54.5\%, representing an risk of dropout of 
+45.5\% with a estimated survival of 6 months.
+
+```{python lifelines, include=FALSE}
+from lifelines import KaplanMeierFitter
+kmf = KaplanMeierFitter()
+T = df_members['months']
+C = df_members['dropout']
+
+kmf.fit(T,C,label="Customers")
+
+kmf.event_table.reset_index()
+kmf.conditional_time_to_event_
+
+survival_table = pd.concat([kmf.event_table.reset_index(),
+                            kmf.conditional_time_to_event_.reset_index(),
+                            kmf.survival_function_.reset_index()],axis=1)
+
+survival_table.drop(['timeline'],axis=1,inplace=True)
+survival_table.columns = ['event_at', 'removed', 'observed', 'censored', 
+                          'entrance', 'at_risk', 'estimated_survival', 
+                          'prob']
+```
+
+
+```{r survivalprobabilities, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+library(gtsummary)
+library(kableExtra)
+library(labelled)
+survival_table <- py$survival_table
+var_label(survival_table$event_at) <- "Event Month"
+var_label(survival_table$removed) <- "Removed"
+var_label(survival_table$observed) <- "Dropout"
+var_label(survival_table$censored) <- "Censored"
+var_label(survival_table$at_risk) <- "Risk of dropout"
+var_label(survival_table$estimated_survival) <- "Estimated survival (months)"
+var_label(survival_table$prob) <- "Survival Probability"
+
+tbl <- head(survival_table, 25)
+
+kbl(tbl, booktabs = T,
+    format = "latex",
+    caption = "Determination of the survival time probabilities",
+    digits = 3) %>%
+    footnote(general = paste("Removed – the sum of customers with dropout and that are",
+                             "censored; Censored – the event did not occur during the",
+                             "period of this data, collection; Risk of Dropout – ",
+                             "number of customers at risk of, dropout; pi – survival",
+                             "probability; Estimated Survival - months to survive in",
+                             "the sports facility.", sep = " "),
+                              threeparttable = TRUE)
+```
+
+Figure \@ref(fig:lifelinesplot) shows the Kaplan Meier survival curve customers 
+considering the number of months of membership (x axis) and survival probability 
+(y axis).
+The customer dropout is very high in the first 12 months, ranging from a survival
+probability of 54\% after the first 6 months until 24\% after 12 months. 
+
+```{python lifelinesplot, echo=FALSE, message=FALSE, warning=FALSE, fig.cap="Survival probabilities"}
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as font_manager
+
+plt.rcParams['figure.figsize'] = [12, 7]
+
+fontL = font_manager.FontProperties(family='Times New Roman',weight=None,style='normal', size=10)
+
+# fontAxis = {'family': 'Times New Roman'}
+
+ax = kmf.plot(color='black')
+ax.legend(prop=fontL)
+#ax.set_xlabel('Months',fontdict=fontAxis,fontsize=12)
+ax.set_xlabel('Months')
+#ax.set_ylabel('Survival probability',fontdict=fontAxis,fontsize=12)
+ax.set_ylabel('Survival probability')
+
+ax.axvline(x=6,ymax=0.54,linestyle='--',color='black');ax.axhline(y=0.54,xmax=0.14,linestyle='--',color='black')
+ax.annotate("0.54",xy=(6, 0.54), xytext=(7, 0.7))
+
+ax.axvline(x=12,ymax=0.24,linestyle='--',color='black');ax.axhline(y=0.24,xmax=0.254,linestyle='--',color='black')
+ax.annotate("0.24",xy=(12, 0.24), xytext=(12, 0.40))
+
+ax.axvline(x=18,ymax=0.15,linestyle='--',color='black');ax.axhline(y=0.15,xmax=0.38,linestyle='--',color='black')
+ax.annotate("0.15",xy=(18, 0.15), xytext=(18, 0.30))
+
+plt.savefig(r.caminho_figuras+'fitnessLifelinesPlot.png', dpi=300)
+plt.show()
+
+plt.close()
+```
+
+Figure \@ref(fig:logrank) shows the survival by gender.
+The survival curves by gender are very similar, both types of 
+customers present a behavior that is not very different.
+
+```{python logrank, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.cap = "Survival by gender"}
+import matplotlib.pyplot as plt
+
+ax = plt.subplot(111)
+
+plt.rcParams['figure.figsize'] = [12, 7]
+
+for gen in df_members['sex_1'].unique():
+    ix = df_members['sex_1'] == gen
+    kmf.fit(T.loc[ix], C.loc[ix], label=str(gen))
+    ax = kmf.plot(ax=ax)
+
+
+plt.savefig(r.caminho_figuras+'fitnessLogrankGender.png', dpi=300)
+
+plt.show()
+plt.close()
+```
+
+Figure \@ref(fig:logrankcfreq) shows the survival by contracted frequency.
+Customers with contracted frequency of 6 and 4 times a week have higher survival
+probabilities, against lower of customers with contracted frequencies of 7 and 
+2 times a week.
+Survival curves allow to explore tendencies related to survival to extract
+actionable knowledge.
+
+```{python logrankcfreq, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.cap = "Survival by contracted frequency"}
+import matplotlib.pyplot as plt
+
+ax = plt.subplot(111)
+
+plt.rcParams['figure.figsize'] = [12, 7]
+
+for item in df_members['cfreq'].unique():
+    ix = df_members['cfreq'] == item
+    kmf.fit(T.loc[ix], C.loc[ix], label=str(item))
+    ax = kmf.plot(ax=ax)
+
+plt.savefig(r.caminho_figuras+'fitnessLogrankCfreq.png', dpi=300)
+
+plt.show()
+plt.close()
+```
+
+
+```{python coxRegression, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE, fig.cap = "Cox regression"}
+vars= ['age', 'dayswfreq', 'tbilled', 'maccess', 'freeuse', 'nentries',
+       'cfreq', 'months', 'sex_1', 'dropout']
+df_regression = df_members[vars].copy()
+
+from lifelines import CoxPHFitter
+cph = CoxPHFitter()
+cph.fit(df_regression,duration_col='months',event_col='dropout')
+
+cph.check_assumptions(df_regression)
+```
+
+The proportional hazard assumptions failed in the following variables:
+age p<0.01, cfreq p<0.01, dayswfreq p<0.01, tbilled p<0.01, freeuse 
+p<0.01, nentries p<0.01.
+
+## Survival trees
+
+To evaluate the performance of the random survival forest we have calculated
+the concordance probability (C-index), IBS and Mean Absolute Error (MAE).
+The IBS presents an accuracy along the 12 months of 0.08 (figure \@ref(fig:createModel1)).
+
+
+```{python createModel1, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Model performance"}
+from pysurvival.models.survival_forest import RandomSurvivalForestModel
+from sklearn.model_selection import train_test_split
+from pysurvival.utils.metrics import concordance_index
+from pysurvival.utils.display import integrated_brier_score
+from pysurvival.utils.display import compare_to_actual
+
+X = df_members.copy()
+t = df_members['months']
+e = df_members['dropout']
+X.drop(axis=1, columns=['months','dropout'],inplace=True)
+
+X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, e, test_size=0.3, random_state=0)
+
+# Fitting the model
+csf = RandomSurvivalForestModel(num_trees=20)
+csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, min_node_size=20, seed = 1)
+
+c_index = concordance_index(csf, X_test, t_test, e_test)
+ibs = integrated_brier_score(csf, X_test, t_test, e_test, t_max=12, figure_size=(12,5))
+#plt.savefig(r.caminho_figuras+'create_model1_fitness.png', dpi=300)
+```
+
+The actual versus predicted model presents the actual and predicted customers which dropout 
+during the 40 months, which as an average absolute error of 7.5 customers (figure \@ref(fig:createModel2)).
+
+```{python createModel2, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Conditional survival forest"}
+
+results = compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False,  figure_size=(12, 6), metrics = ['rmse', 'mean', 'median'])
+```
+
+```{r previsaoglobal, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+# gravar a figura com a previsão global
+#ggsave(file="/mnt/c/nuvem/Dropbox/doutoramento/tese/9.tese_documento/PhD-Pedro-Sobreiro/figures/previsao_global.pdf",device="pdf")
+
+```
+
+Table \@ref(tab:summarytable2) shows features importance calculated according [@Breiman_2001],
+where the percent increase in misclassification rate as compared to the out-of-bag rate (with all 
+variables intact), out-of-bag is a bootstrap aggregating (subsampling with replacement to create 
+training samples for the model to learn from) where two independent sets are created. 
+One set, the bootstrap sample, data chosen to be "in-the-bag" by sampling with replacement and the 
+out-of-bag is all data not chosen in the sampling process.
+The most important variable is the $dayswfreq$, followed by $tbilled$ and
+$nentries$, compared with the $cfreq$, $age$, and $sex$.
+
+```{r summarytable2, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+tbl <- py$csf$variable_importance_table
+kbl(tbl, booktabs = T, caption = "Features importance in the survival model")
+```
+
+The prediction is very similar to the actual value. 
+The model accuracy is very high with a root mean square error of
+`r round(py$results$root_mean_squared_error)`.
+The mean absolute error mean was `r round(py$results$mean_absolute_error,2)` customers,
+and the median absolute error was `r round(py$results$median_absolute_error,2)`. 
+
+
+## Survival trees based model with clusters
+
+In this approach we have created clusters and applied the survival trees within 
+each cluster.
+The determination of the clusters using the BIC criterion where the EEV model: 7 clusters -57159.24; 
+6 clusters -63937.59; and 4 clusters -77088.81 figure \@ref(fig:clusters) shows the 
+determination of the number of clusters using BIC, also the elbow analysis available in 
+figure \@ref(fig:elbowCalculation). 
+An optimal number of clusters was considered of five. 
+Considering that was the value after the average distortion was flattened.
+
+```{r clusters, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Analysis number of clusters"}
+library(mclust)
+#y <- scale(py$df_members)
+y <- scale(py$df_members)
+
+set.seed(0) # to make reproducible
+
+#bic <- mclustBIC(y,modelNames = c("VEI"))
+bic <- mclustBIC(y)
+# Best model using the BIC criteria
+#bic
+plot(bic, what = "BIC")
+
+
+```
+
+```{r NbClust, echo = FALSE, message = FALSE, warning = FALSE, eval=FALSE}
+library(NbClust)
+nb <- NbClust(y, diss = NULL, distance = "euclidean",
+              min.nc = 2, max.nc = 5, method = "kmeans",
+              index = "all", alphaBeale = 0.1)
+hist(nb$Best.nc[1, ], breaks = max(na.omit(nb$Best.nc[1, ])))
+
+```
+
+```{python elbowCalculation, results='hide', echo=FALSE, message=FALSE, warning = FALSE, fig.cap="Elbow analysis"}
+from sklearn.cluster import KMeans
+from sklearn import preprocessing
+from scipy.spatial.distance import cdist
+import matplotlib.pyplot as plt
+import numpy as np
+
+#Finding optimal no. of clusters
+clusters=range(1,20)
+meanDistortions=[]
+ 
+for k in clusters:
+    model=KMeans(n_clusters=k)
+    model.fit(df_members)
+    prediction=model.predict(df_members)
+    meanDistortions.append(sum(np.min(cdist(df_members, model.cluster_centers_, 'euclidean'), axis=1)) / df_members.shape[0])
+ 
+plt.plot(clusters, meanDistortions, 'bx-')
+plt.xlabel('k')
+plt.ylabel('Average distortion')
+plt.show();
+
+```
+
+The calculation of the clusters to each member in the dataset was developed considering,
+7,6 and 4 clusters. 
+However after the executions KMeans only performed with 3 clusters.
+
+```{python kmeanscalculation, results='hide', echo=FALSE, message=FALSE, warning=FALSE}
+# we are going to use random_state = 0 for the centroid
+# initialization being deterministic allowing a better
+# reproducibility
+cluster = KMeans(n_clusters=3, random_state=0)
+
+cluster.fit(df_members)
+df_members['cluster']=cluster.predict(df_members)
+#print(df_members.cluster.value_counts());
+```
+
+```{python kmeans PCA, echo=FALSE, message = FALSE, warning = FALSE}
+from sklearn.decomposition import PCA
+
+plt.rcParams['figure.figsize'] = [13, 4]
+
+pca=PCA(n_components=2)
+df_members['X_pca']=pca.fit_transform(df_members)[:,0] #todas as linhas da primeira coluna com redução
+df_members['Y_pca']=pca.fit_transform(df_members)[:,1] #todas as linhas da segunda coluna com redução
+
+fig, ax = plt.subplots()
+for cluster in df_members.cluster.unique():
+    x = df_members['X_pca'].loc[df_members.cluster == cluster]
+    y = df_members['Y_pca'].loc[df_members.cluster == cluster]
+    ax.scatter(x, y, label=cluster, alpha=1, edgecolors='none');
+
+ax.legend()
+ax.grid(True)
+ax.set_title('Customers clusters');
+plt.show();
+```
+
+The model accuracy is very high in the first years. The prediction is very
+similar to the actual value. The absolute error mean of
+6 customers.
+
+```{python createModelClusters, results='hide', include=TRUE, echo=FALSE, message = FALSE, warning=FALSE}
+# Building training and testing sets for the clusters
+
+df_resultados = pd.DataFrame(columns=['cluster','rmse','mean','median'])
+
+for cluster in df_members.cluster.unique():
+    # Number of samples in the dataset
+    df_members_cluster = df_members[df_members.cluster == cluster].copy()
+    X = df_members_cluster.copy()
+    t = df_members_cluster['months']
+    e = df_members_cluster['dropout']
+    X.drop(axis=1, columns=['months','dropout'], inplace=True)
+    X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, 
+                                                        e, random_state=0)
+    # Fitting the model
+    csf = RandomSurvivalForestModel(num_trees=20)
+    csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, 
+            min_node_size=20, seed = 1)
+
+    results_cluster = compare_to_actual(csf, X_test, t_test, e_test, 
+                                is_at_risk = False, figure_size=(12, 6), 
+                                metrics = ['rmse', 'mean', 'median'])
+
+  
+    #print(f"The cluster {cluster} as a size of {X.shape[0]}")
+    #print(results_cluster)
+    #print(f"Cluster {cluster} RMSE {results_cluster['root_mean_squared_error']}")
+    #print(f"Cluster {cluster} MAE {results_cluster['median_absolute_error']}")
+    #print(f"Cluster {cluster} MAError {results_cluster['mean_absolute_error']}")
+    
+    df_resultados = df_resultados.append({'cluster' : cluster, 
+                                          'rmse' : results_cluster['root_mean_squared_error'], 
+                                          'mean' : results_cluster['median_absolute_error'], 
+                                          'median' : results_cluster['mean_absolute_error']}, 
+                                          ignore_index = True)
+```
+
+The performance of the cluster 1 the IBS presents an accuracy of 0.06 
+(figure \@ref(fig:createModelCluster1IBS)) along all time.
+The actual versus predicted model presents the actual and predicted customers which dropout during
+the 40 months, which as an mean absolute error of 1.5 customers, the mean median absolute
+error was 0.61 and the Root Mean Square Error of 2.8 (figure \@ref(fig:createModelCluster1SF)).
+
+The features importance in the survival model cluster 1 (table \@ref(tab:summarytableCluster1))
+identify the three most relevant features to predict survival $maccess$, 
+$tbilled$, and $dayswfreq$. The features with lower relevance were $freeuse$, $sex$ and $cfreq$.
+
+
+
+```{python createModelCluster1IBS, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Model performance cluster 1"}
+df_members_cluster = df_members[df_members.cluster == 0].copy()
+X = df_members_cluster.copy()
+t = df_members_cluster['months']
+e = df_members_cluster['dropout']
+X.drop(axis=1, columns=['months','dropout','X_pca','Y_pca','cluster'], inplace=True)
+X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, 
+                                                    e, random_state=0)
+# Fitting the model
+csf = RandomSurvivalForestModel(num_trees=20)
+csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, 
+        min_node_size=20, seed = 1)    
+
+c_index = concordance_index(csf, X_test, t_test, e_test)
+ibs = integrated_brier_score(csf, X_test, t_test, e_test, t_max=12, 
+                             figure_size=(12,5))
+
+```
+
+```{python createModelCluster1SF, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Conditional survival forest cluster 1"}
+compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False, figure_size=(12, 6), 
+                  metrics = ['rmse', 'mean', 'median'])
+
+```
+
+```{r summarytableCluster1, echo=FALSE, message=FALSE, warning=FALSE}
+tbl <- py$csf$variable_importance_table
+kbl(tbl, booktabs = T,
+    caption = "Features importance in the survival model with cluster 1")
+```
+
+The performance of the cluster 2 the IBS presents an accuracy along time 0.09 
+(figure \@ref(fig:createModelCluster2IBS)) along all time.
+The actual versus predicted model presents the actual and predicted customers which dropout during
+the 40 months, which as an mean absolute error of 6.5 customers, the mean median absolute
+error was 2.3 and the Root Mean Square Error of 11.79 (figure \@ref(fig:createModelCluster2SF)).
+The features importance in the survival model cluster 2 (table \@ref(tab:summarytableCluster2))
+identify the three most relevant features to predict survival $dayswfreq$, 
+$tbilled$, and $freeuse$. The least relevant were $nentries$, $cfreq$, and $age$.
+
+
+```{python createModelCluster2IBS, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Model performance cluster 2"}
+df_members_cluster = df_members[df_members.cluster == 1].copy()
+X = df_members_cluster.copy()
+t = df_members_cluster['months']
+e = df_members_cluster['dropout']
+X.drop(axis=1, columns=['months','dropout','X_pca','Y_pca','cluster'], inplace=True)
+X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, 
+                                                    e, random_state=0)
+# Fitting the model
+csf = RandomSurvivalForestModel(num_trees=20)
+csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, 
+        min_node_size=20, seed = 1)    
+
+c_index = concordance_index(csf, X_test, t_test, e_test)
+ibs = integrated_brier_score(csf, X_test, t_test, e_test, t_max=12, 
+                             figure_size=(12,5))
+
+```
+
+```{python createModelCluster2SF, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Conditional survival forest cluster 2"}
+compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False, figure_size=(12, 6), 
+                  metrics = ['rmse', 'mean', 'median'])
+
+```
+
+The performance of the cluster 3 the IBS presents an accuracy along time 0.01 
+(figure \@ref(fig:createModelCluster3IBS)) along all time.
+The actual versus predicted model presents the actual and predicted customers which dropout during
+the 40 months, which as an mean absolute error of 1.5 customers, the mean median absolute
+error was 1.2 and the Root Mean Square Error of 2.08 (figure \@ref(fig:createModelCluster3SF)).
+The features importance in the survival model cluster 3 (table \@ref(tab:summarytableCluster3))
+identify the three most relevant features to predict survival $tbilled$, 
+$dayswfreq$, and $nentries$. 
+The least relevant were $sex$, $age$, and $cfreq$.
+
+
+```{r summarytableCluster2, echo=FALSE, message=FALSE, warning=FALSE}
+tbl <- py$csf$variable_importance_table
+kbl(tbl, booktabs = T,
+    caption = "Features importance in the survival model with cluster 2")
+```
+
+```{python createModelCluster3IBS, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Model performance cluster 3"}
+df_members_cluster = df_members[df_members.cluster == 2].copy()
+X = df_members_cluster.copy()
+t = df_members_cluster['months']
+e = df_members_cluster['dropout']
+X.drop(axis=1, columns=['months','dropout','X_pca','Y_pca','cluster'], inplace=True)
+X_train, X_test, t_train, t_test, e_train, e_test = train_test_split(X, t, 
+                                                    e, random_state=0)
+# Fitting the model
+csf = RandomSurvivalForestModel(num_trees=20)
+csf.fit(X_train, t_train, e_train, max_features='sqrt', max_depth=5, 
+        min_node_size=20, seed = 1)    
+
+c_index = concordance_index(csf, X_test, t_test, e_test)
+ibs = integrated_brier_score(csf, X_test, t_test, e_test, t_max=12, 
+                             figure_size=(12,5))
+
+```
+
+```{python createModelCluster3SF, results='hide', echo=FALSE, message = FALSE, warning = FALSE, fig.cap = "Conditional survival forest cluster 3"}
+compare_to_actual(csf, X_test, t_test, e_test, is_at_risk = False, figure_size=(12, 6), 
+                  metrics = ['rmse', 'mean', 'median'])
+
+```
+
+The features importance in the survival model (table \@ref(tab:summarytableCluster3))
+identify the three most relevant features to predict survival $dayswfreq$, 
+$tbilled$, and $nentries$.
+
+```{r summarytableCluster3, echo=FALSE, message=FALSE, warning=FALSE}
+tbl <- py$csf$variable_importance_table
+kbl(tbl, booktabs = T,
+    caption = "Features importance in the survival model with cluster 3")
+```
+
+### Model Comparison 
+
+Table \@ref(tab:summarytable3) shows the performance of both approaches, with or without clusters. 
+The RMSE in the clusters 1, 2 and 3 is lower than not using clusters to predict dropout.
+Overall the performance improved. The performance is also better using mean and median.
+
+
+```{r summarytable3, echo=FALSE, message=FALSE, warning=FALSE}
+tbl <- py$df_resultados
+# append results without clusters
+tbl <- rbind(tbl, c("w/cluster",
+                   py$results$root_mean_squared,
+                   py$results$median_absolute_error,
+                   py$results$mean_absolute_error))
+kbl(tbl, booktabs = T,
+    caption = "Performance of prediction in each cluster", digits = 3)
+```
+
+The model accuracy without clusters is very high with a root mean
+square error of 13, the mean absolute error mean was 7.53 customers, and the median 
+absolute error was 4.04.
+The model using clusters had an mean absolute error of 1.5 customers, the mean median absolute
+error was 1.2 and the Root Mean Square Error of 2.08.
+The performance using clusters improved significantly.
+
+# Conclusion
+
+This paper investigated the customer dropout in a Health Club organization, using
+a dynamic perspective that the dropout risk varies along the time.
+Exploring two approaches, using a survival model based on random forests 
+with or without clusters.
+The model using clusters allowed to combine the customers in different clusters,
+an hybrid approach.
+Based on this performance the proposed model using clusters allows to improve 
+the accuracy on the survival model allowing to target approaches considering
+the timing when the dropout occurs, considering the clusters where the customer is.
+Is very important for managers use this information to improve their retention
+strategies.
+
+
+
+<!--
+
+```{=tex}
+\begin{itemize}
+    \item RQ1: What is the current state of the research being developed?
+    \item RQ2: What algorithms have been used to predict dropout?
+    \item RQ3: What are the features used to predict dropout?
+    \item RQ4: When does dropout occur?
+    \item RQ5: How is the accuracy of the machine learning algorithms in predicting dropout measured?
+\end{itemize}
+```
+From RQ1, it was possible to identify some business areas that are
+under-researched, such as the energy sector, education, logistics and
+hospitality. Compared to other business areas such telecom or the financial
+sector, research on the energy sector or water supply is lacking, considering
+the contractual settings that are assumed to provide such types of services.
+Considering the business model of many software companies as software as a
+services (SaS), the number of research works is also surprisingly low.
+
+RQ2 also provided an overall perspective related to the algorithms being used to
+predict customer dropout. The first could be the importance and wider adoption
+of decision trees and random forests [@antipov_applying_2010;
+@benoit_improving_2012; @burez_crm_2007], and logistic regression
+[@coussement_improved_2010], which could be due to its higher interpretability
+and flexibility [@keramati_improved_2014]. Interpretability is an important
+aspect for the marketing department in the extraction of valuable information
+from the model to develop effective retention strategies [@verbeke_new_2012].
+The problem arises in the balancing between interpretability and the higher
+performance of the algorithms inspired by nature (such as neural networks). From
+a business perspective, dropout prediction should also be considered as a
+business objective, which requires more than predicting if the customer will
+churn or not [@devriendt_why_2019], where higher interpretability provides
+better support in the development of retention strategies. The developed SLR
+also raises the possibility of integrating different algorithms using ensemble
+methods or integrating several models using a hybrid approach. None of the
+studies integrated the survival approach to predict customer dropout, for
+example, using a hybrid approach.
+
+It is considered positive if actions are developed to retain customers, but the
+problems should also be considered, such as the following: (1) customers who
+have greater risk of dropout should be targeted to provide a base for a better
+ROI in the retention strategies [@xie_customer_2009; @coussement_churn_2008] and
+(2) the retention strategies should be developed focused on customers with
+higher satisfaction, or its inclusion could be a reminder of the contractual
+agreement nearing an end and could lead to churn [@devriendt_why_2019].
+
+From RQ3, several types of features being used were able to be identified, such
+as demographic, behavioral, and economic indicators, pictorial data, network
+relationships or high cardinality features. The problem that arises is that some
+studies used data and features that were not described, and this creates a major
+issue, How can reproducibility be developed in a study without the availability
+of the data or the identification of the features used? Considering that science
+is driven by data, with the development of new technologies, the increasing
+complexity of research and the amount of data collected, the challenge is to
+ensure that research is available to all [@Hanson_Sugden_Alberts_2011]; this
+requires both availability of the data and the algorithms so that they can be
+explored by other researchers. The features are selected mainly to verify the
+performance of the models, and are essential to performance prediction,
+accuracy, and the steps for processing the data, which are fundamental to
+improve the model accuracy [@azeem_churn_2017].
+
+There are several challenges around the timing related to dropout, or
+considering the dynamic behavior of the customer in the intent to drop out
+[@alboukaey_dynamic_2020]. The importance of understanding when dropout will
+occur and the risk when discarding the temporal perspective of the problem seems
+to be an element that should be addressed. Few studies considered this
+[@perianez_churn_2016; @burez_separating_2008]. This shows an opportunity to
+address the importance of the timeframe and its influence on the efficiency of
+the model.
+
+According to each business model, the timeframe could be addressed considering
+the survival probability according to the customer relationship age, and dropout
+predictions could be developed according to these survival probabilities, as
+suggested by @esteves_churn_2016, to investigate which data timeframe produces
+the best result and how the efficiency of the models is influenced by this
+timeframe. Exploring the duration of the relation and the understanding of the
+features that increase or decrease that duration seems to be an important
+approach that could complement the existing approaches to predicting dropout.
+
+From RQ5, the literature analysis showed that different types of questions
+arise. Which are the best approaches to develop the analysis of the performance
+in predicting dropout? Several metrics are customer dropout is to improve the
+performance of organizations in retaining customers, which is a management
+problem in which data mining is adopted [@verbeke_new_2012]. The goals of the
+model should be formulated considering the context of the problem that is being
+addressed; in marketing retention strategies, the up-lift supports the
+development of proactive actions to minimize the investment in retention
+strategies [@coussement_churn_2008]. Some assumptions that underlie the
+adoption of uplift metrics consider that customers with a higher risk of
+churning could not be the best targets, as suggested by @ascarza_retention_2018.
+Other researchers addressed the problem using the top-decile lift to develop
+more proactive actions to retain the customers at risk of churning
+[@coussement_churn_2008;@xie_customer_2009]. This approach considers the 10% of
+customers with more risk, and investments in retention strategies should be
+developed that distinguish the churners susceptible to marketing actions from
+those who will leave anyway [@coussement_comparative_2017]. Although uplift
+models seem to be good strategies, they should also used, such as AUC,
+sensitivity, specificity, recall, precision, and F-score. However, the goal
+ofconsider factors other than risk and customer satisfaction, as not taking this
+into consideration could be counterproductive and the model should be removed
+from the retention strategy.
+
+The true business objective is to reduce customer churn. Customers who are about
+to churn but cannot be retained should be excluded from the campaign, as
+targeting them will be a waste of scarce resources [@devriendt_why_2019]. Using
+these models seem to be a good strategy, as they can outperform predictive
+models that consider only accuracy from a profitability busshould be considered
+that customers with a higher risk of churning may not be the best targets to
+develop retention strategies. Those perspectives entail the dropout.
+
+that a business context, or the clarification of a business objective underlying
+the prediction of customer dropout, should be developed, to clarify which
+objectives should be achieved before employing the profitability of reducing g
+machine learning algorithms. Surprisingly, the analyzed studies did not address
+the customer lifetime value as an objective to optimize considerininess
+perspective.
+
+# Aspects to consider
+
+-   Interpretability from RQ2
+-   The business objective is to increase the number of members and organization
+    profits
+-   piping several algorithms to improve accuracy. Aka hybrid approach
+-   @Alboukaey_dynamic_2020 proposes ...
+-   grep the articles addressing hybrid: pdfgrep -ri "hybrid.{1,10} approach"
+
+# Results
+
+In this section, we present our experiments to validate the proposed models,
+comparing against other approaches. The models where optimized using the
+hyper-parameters Grid Search technique. The explored hyper-parameters and the
+best values of these parameters for every model are listed in (Table 3).
+
+```{=latex}
+\begin{table}[ht]
+    \footnotesize
+    \centering
+    \begin{tabular}{p{0.15\textwidth}p{0.55\textwidth}p{0.25\textwidth}}
+    \hline
+    \textbf{Model name} & \textbf{Explored parameters values} & \textbf{Best parameters} \\
+    \hline
+    Survival trees  & pysurvival random forest                  & a \\
+    Survival trees
+    with clusters   & pysurvival random forest with clusters    & a \\
+    Scikit survival 
+    trees           & scikit survival                           & a \\
+    Scikit survival 
+    with clusters   & scikit with clusters                      & a \\
+    Scikit survival 
+    gradient boost  & scikit survival gradient boost            & a \\
+    Scikit survival 
+    gradient boost 
+    with clusters   & scikit with clusters                      & a \\
+    \hline
+    \end{tabular}
+    \caption{Hyper-parameters best values}
+    \label{hyperparametersbestvalues}
+\end{table}
+```
+The results of the performance of the models are available in table 4. Colocar o
+modelo. Resultados do modelo
+
+```{=latex}
+\begin{table}[ht]
+    \footnotesize
+    \centering
+    \begin{tabular}{p{0.15\textwidth}p{0.35\textwidth}r p{0.10\textwidth}}
+    \hline
+    \textbf{Model name} & \textbf{Results} & \textbf{n}\\
+    \hline
+    Survival trees  & RMSE 57.815                                     & 25316\\
+                    & MAE 18.966                                      & \\   
+                    & MEAE 38.557                                     & \\
+    Survival trees  & Cluster 0: RMSE  2.785 MAE  0.000 MEAE  0.899   &   930\\
+    with clusters   & Cluster 1: RMSE 78.141 MAE 28.537 MEAE 56.989   & 17067\\
+                    & Cluster 2: RMSE 15.081 MAE  1.995 MEAE  6.850   &  2423\\
+                    & Cluster 3: RMSE  9.354 MAE  2.506 MEAE  6.427   &  2816\\
+                    & Cluster 4: RMSE  8.805 MAE  1.349 MEAE  3.725   &  2080\\
+                    
+    Scikit survival 
+    trees           & scikit survival                                 & \\
+    Scikit survival 
+    with clusters   & scikit with clusters                            & \\
+    Scikit survival 
+    gradient boost  & scikit survival gradient boost                  & \\
+    Scikit survival 
+    gradient boost 
+    with clusters   & scikit with clusters                            & \\
+    \hline
+    \end{tabular}
+    \caption{Hyper-parameters best values}
+    \label{hyperparametersbestvalues2}
+    * Root Mean Square Error (RMSE), Mean Absolute Error (MAE), Median Absolute Error (MEAE)  
+\end{table}
+```
+
+# Conclusion
+
+Article Ascarza
+
+-   Retention Futility: Targeting High-Risk Customers Might be Ineffective
+    [@ascarza_retention_2018]
+
+Ascarza, E. (2018). Retention Futility: Targeting High-Risk Customers Might be
+Ineffective. Journal of Marketing Research, 55(1), 80-98. sim.
+<https://doi.org/10.1509/jmr.16.0163>
+
+Example of Developed actions place in the discussion:
+
+``` markdown
+Each month, the company identified the customers who were up for renewal and
+split them (randomly and evenly) between a treatment group that received a 
+"thank you" gift with the letter and a control group that received only the 
+renewal latter.
+```
+-->
+
+
+# References {.unnumbered}
+
+::: {#refs}
+:::
+
+# Appendix: Chunk options {.unnumbered}
+
+## Software versioning R
+
+### R
+
+```{r fig-versioning, echo = TRUE}
+cat(paste("#", capture.output(sessionInfo()), "\n", collapse  = ""))
+  # or use message() instead of cat()
+```
+
