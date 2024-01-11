@@ -20,16 +20,11 @@ for the members, the service subscription has several payment options:
 - Student fee 2.5€
 - under-14 fee 1€
 
-# Methodology
-
-In this study, we adopt random survival forests which have never been used in understanding 
-factors affecting membership in a sport club using existing data in a Sport Club. 
-The analysis is based on the use of random survival forests in the presence of covariates 
-that do not necessarily satisfy the PH assumption. 
-Random Survival Forests does not make the proportional hazards assumption [@Ehrlinger_2016] 
-and has the flexibility to model survivor curves that are of dissimilar shapes for 
-contrasting groups of subjects. Random Survival Forest is an extension of Random Forest 
-allowing efficient non-parametric analysis of time to event data [@Breiman_2001].
+In this study, we adopted random survival forests that does not make the proportional hazards 
+assumption [@Ehrlinger_2016] and has the flexibility to model survivor curves that are of 
+dissimilar shapes for contrasting groups of subjects. 
+Random Survival Forest is an extension of Random Forest allowing efficient non-parametric 
+analysis of time to event data [@Breiman_2001].
 This characteristics allow us to surpass the Cox Regression limitation of the proportional hazard
 assumption, requiring to exclude variables which not fulfill the model assumption. 
 It was shown by @Breiman_2001 that ensemble learning can be further improved by injecting 
@@ -38,7 +33,15 @@ The random survival forest was developed using the package PySurvival [@Fotso_ot
 The most relevant variables predicting the dropout are analysed using the log-rank test. 
 The metric variables are transformed to categorical using the quartiles to provide a statistical
 comparison of groups. 
-The survival analysis was conducted using the package Lifelines [@Davidson-Pilon_2021].
+Was also used the package Lifelines [@Davidson-Pilon_2021] for the kaplan-meier analysis.
+
+The article using above assumptions was developed in RMarkdown and is available in the 
+folder [article](./article/) and published [here](https://www.mdpi.com/2079-9292/11/20/3328)
+
+```
+Sobreiro, P.; Garcia-Alonso, J.; Martinho, D.; Berrocal, J. Hybrid Random Forest Survival Model to Predict Customer Membership Dropout. Electronics 2022, 11, 3328. https://doi.org/10.3390/electronics11203328
+```
+
 
 # Packages installation
 
