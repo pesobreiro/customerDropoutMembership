@@ -395,7 +395,7 @@ library(readxl)
 library(dplyr)
 library(visdat)
 
-df_members <- read_excel("data/fitness_customers.xlsx")
+df_members <- read_excel("./../data/fitness_customers.xlsx")
 
 
 # rename column labels
