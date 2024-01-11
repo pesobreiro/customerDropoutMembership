@@ -38,9 +38,9 @@ Was also used the package Lifelines [@Davidson-Pilon_2021] for the kaplan-meier 
 The article using above assumptions was developed in RMarkdown and is available in the 
 folder [article](./article/) and published [here](https://www.mdpi.com/2079-9292/11/20/3328)
 
-```
-Sobreiro, P.; Garcia-Alonso, J.; Martinho, D.; Berrocal, J. Hybrid Random Forest Survival Model to Predict Customer Membership Dropout. Electronics 2022, 11, 3328. https://doi.org/10.3390/electronics11203328
-```
+> Sobreiro, P.; Garcia-Alonso, J.; Martinho, D.; Berrocal, J. Hybrid Random Forest Survival Model to Predict Customer Membership Dropout. 
+> Electronics 2022, 11, 3328. https://doi.org/10.3390/electronics11203328
+
 
 
 # Packages installation
